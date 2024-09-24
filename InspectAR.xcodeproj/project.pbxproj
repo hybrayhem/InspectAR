@@ -14,6 +14,8 @@
 		554A12BF2CA0775F0056B383 /* ModelSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12BE2CA0775F0056B383 /* ModelSetupView.swift */; };
 		554A12C12CA0777A0056B383 /* InspectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12C02CA0777A0056B383 /* InspectionView.swift */; };
 		554A12DF2CA2C2730056B383 /* ModelAlignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12DE2CA2C2730056B383 /* ModelAlignView.swift */; };
+		554A12E22CA349230056B383 /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12E12CA349230056B383 /* DocumentPicker.swift */; };
+		554A12E62CA34E370056B383 /* ModelPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12E52CA34E370056B383 /* ModelPreview.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +27,8 @@
 		554A12BE2CA0775F0056B383 /* ModelSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelSetupView.swift; sourceTree = "<group>"; };
 		554A12C02CA0777A0056B383 /* InspectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectionView.swift; sourceTree = "<group>"; };
 		554A12DE2CA2C2730056B383 /* ModelAlignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAlignView.swift; sourceTree = "<group>"; };
+		554A12E12CA349230056B383 /* DocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPicker.swift; sourceTree = "<group>"; };
+		554A12E52CA34E370056B383 /* ModelPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelPreview.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,9 +63,9 @@
 			children = (
 				554A12B02CA055FF0056B383 /* AppDelegate.swift */,
 				554A12B22CA055FF0056B383 /* RootView.swift */,
-				554A12BE2CA0775F0056B383 /* ModelSetupView.swift */,
-				554A12DE2CA2C2730056B383 /* ModelAlignView.swift */,
-				554A12C02CA0777A0056B383 /* InspectionView.swift */,
+				554A12E02CA3490C0056B383 /* SetupView */,
+				554A12E32CA34D720056B383 /* AlignView */,
+				554A12E42CA34D7A0056B383 /* InspectView */,
 				554A12B42CA056000056B383 /* Assets.xcassets */,
 				554A12B62CA056000056B383 /* Preview Content */,
 			);
@@ -74,6 +78,32 @@
 				554A12B72CA056000056B383 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		554A12E02CA3490C0056B383 /* SetupView */ = {
+			isa = PBXGroup;
+			children = (
+				554A12BE2CA0775F0056B383 /* ModelSetupView.swift */,
+				554A12E12CA349230056B383 /* DocumentPicker.swift */,
+				554A12E52CA34E370056B383 /* ModelPreview.swift */,
+			);
+			path = SetupView;
+			sourceTree = "<group>";
+		};
+		554A12E32CA34D720056B383 /* AlignView */ = {
+			isa = PBXGroup;
+			children = (
+				554A12DE2CA2C2730056B383 /* ModelAlignView.swift */,
+			);
+			path = AlignView;
+			sourceTree = "<group>";
+		};
+		554A12E42CA34D7A0056B383 /* InspectView */ = {
+			isa = PBXGroup;
+			children = (
+				554A12C02CA0777A0056B383 /* InspectionView.swift */,
+			);
+			path = InspectView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -149,7 +179,9 @@
 				554A12BF2CA0775F0056B383 /* ModelSetupView.swift in Sources */,
 				554A12DF2CA2C2730056B383 /* ModelAlignView.swift in Sources */,
 				554A12B32CA055FF0056B383 /* RootView.swift in Sources */,
+				554A12E62CA34E370056B383 /* ModelPreview.swift in Sources */,
 				554A12C12CA0777A0056B383 /* InspectionView.swift in Sources */,
+				554A12E22CA349230056B383 /* DocumentPicker.swift in Sources */,
 				554A12B12CA055FF0056B383 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SceneKit
-import UniformTypeIdentifiers
 
 enum AlignmentMethod: String, CaseIterable {
     case manual = "Manual"
@@ -25,6 +24,13 @@ struct ModelSetupView: View {
     @State private var isUploading = false
     @State private var uploadProgress: Double = 0.0
     @State private var isUploadComplete = false
+    
+    private var isUploadDisabled: Bool {
+        selectedFile == nil || isUploading
+    }
+    private var uploadButtonColor: Color {
+        isUploadDisabled ? .gray : (isUploadComplete ? .blue : .green)
+    }
     
     var body: some View {
         VStack(spacing: 20) {
@@ -132,7 +138,6 @@ struct ModelSetupView: View {
             // Upload/Next Button
             Button(action: {
                 if isUploadComplete {
-                    // Handle "Next" action
                     print("Next button tapped")
                 } else {
 //                    uploadFile()
@@ -141,11 +146,11 @@ struct ModelSetupView: View {
                 Text(isUploadComplete ? "Next" : "Upload")
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.green)
+                    .background(uploadButtonColor)
                     .foregroundColor(.white)
                     .cornerRadius(15)
             }
-            .disabled(selectedFile == nil || isUploading)
+            .disabled(isUploadDisabled)
         }
         .padding()
     }
@@ -164,71 +169,7 @@ struct ModelSetupView: View {
 //            }
 //        }
 //    }
-    
-    private func createScene() -> SCNScene {
-        let scene = SCNScene()
-        scene.background.contents = UIColor.gray.withAlphaComponent(0.2)
-        
-        // Create a sample mesh (cube) for demonstration
-        // In a real app, you'd load the actual .obj file here
-        let box = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0.1)
-        let boxNode = SCNNode(geometry: box)
-        scene.rootNode.addChildNode(boxNode)
-        
-        // Add rotation animation
-        let rotation = SCNAction.rotateBy(x: 0, y: 2 * .pi, z: 0, duration: 10)
-        let repeatRotation = SCNAction.repeatForever(rotation)
-        boxNode.runAction(repeatRotation)
-        
-        // Add a camera to the scene
-        let camera = SCNCamera()
-        let cameraNode = SCNNode()
-        cameraNode.camera = camera
-        // Position the camera
-        let d: Float = 1.25
-        cameraNode.position = SCNVector3(d, d, d)
-        cameraNode.look(at: SCNVector3(0, 0, 0))
-        scene.rootNode.addChildNode(cameraNode)
-        
-        return scene
-    }
 }
-
-//struct DocumentPicker: UIViewControllerRepresentable {
-//    @Binding var selectedFile: URL?
-//    
-//    func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
-//        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [UTType.stepFile], asCopy: true)
-//        picker.delegate = context.coordinator
-//        picker.allowsMultipleSelection = false
-//        return picker
-//    }
-//    
-//    func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {}
-//    
-//    func makeCoordinator() -> Coordinator {
-//        Coordinator(self)
-//    }
-//    
-//    class Coordinator: NSObject, UIDocumentPickerDelegate {
-//        var parent: DocumentPicker
-//        
-//        init(_ parent: DocumentPicker) {
-//            self.parent = parent
-//        }
-//        
-//        func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-//            guard let url = urls.first else { return }
-//            parent.selectedFile = url
-//        }
-//    }
-//}
-//
-//extension UTType {
-//    static var stepFile: UTType {
-//        UTType(importedAs: "com.step-file")
-//    }
-//}
 
 #Preview {
     ModelSetupView()
