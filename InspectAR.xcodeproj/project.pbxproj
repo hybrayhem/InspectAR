@@ -13,6 +13,7 @@
 		554A12B82CA056000056B383 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 554A12B72CA056000056B383 /* Preview Assets.xcassets */; };
 		554A12BF2CA0775F0056B383 /* ModelSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12BE2CA0775F0056B383 /* ModelSetupView.swift */; };
 		554A12C12CA0777A0056B383 /* InspectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12C02CA0777A0056B383 /* InspectionView.swift */; };
+		554A12DF2CA2C2730056B383 /* ModelAlignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12DE2CA2C2730056B383 /* ModelAlignView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		554A12B72CA056000056B383 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		554A12BE2CA0775F0056B383 /* ModelSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelSetupView.swift; sourceTree = "<group>"; };
 		554A12C02CA0777A0056B383 /* InspectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectionView.swift; sourceTree = "<group>"; };
+		554A12DE2CA2C2730056B383 /* ModelAlignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAlignView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 				554A12B02CA055FF0056B383 /* AppDelegate.swift */,
 				554A12B22CA055FF0056B383 /* RootView.swift */,
 				554A12BE2CA0775F0056B383 /* ModelSetupView.swift */,
+				554A12DE2CA2C2730056B383 /* ModelAlignView.swift */,
 				554A12C02CA0777A0056B383 /* InspectionView.swift */,
 				554A12B42CA056000056B383 /* Assets.xcassets */,
 				554A12B62CA056000056B383 /* Preview Content */,
@@ -144,6 +147,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				554A12BF2CA0775F0056B383 /* ModelSetupView.swift in Sources */,
+				554A12DF2CA2C2730056B383 /* ModelAlignView.swift in Sources */,
 				554A12B32CA055FF0056B383 /* RootView.swift in Sources */,
 				554A12C12CA0777A0056B383 /* InspectionView.swift in Sources */,
 				554A12B12CA055FF0056B383 /* AppDelegate.swift in Sources */,
