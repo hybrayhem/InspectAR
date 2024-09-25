@@ -17,6 +17,9 @@
 		554A12E22CA349230056B383 /* ModelSetupView+File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12E12CA349230056B383 /* ModelSetupView+File.swift */; };
 		554A12E62CA34E370056B383 /* ModelPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12E52CA34E370056B383 /* ModelPreview.swift */; };
 		554A12EC2CA433320056B383 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 554A12EB2CA433320056B383 /* Alamofire */; };
+		554A12EE2CA4896D0056B383 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12ED2CA4896D0056B383 /* Constants.swift */; };
+		554A12F02CA489D10056B383 /* CIAM-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 554A12EF2CA489D10056B383 /* CIAM-Info.plist */; };
+		554A12F22CA493380056B383 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 554A12F12CA493380056B383 /* .gitignore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +34,9 @@
 		554A12E12CA349230056B383 /* ModelSetupView+File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelSetupView+File.swift"; sourceTree = "<group>"; };
 		554A12E52CA34E370056B383 /* ModelPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelPreview.swift; sourceTree = "<group>"; };
 		554A12E82CA36EB80056B383 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = InspectAR/Info.plist; sourceTree = "<group>"; };
+		554A12ED2CA4896D0056B383 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		554A12EF2CA489D10056B383 /* CIAM-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CIAM-Info.plist"; sourceTree = "<group>"; };
+		554A12F12CA493380056B383 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,8 +54,11 @@
 		554A12A42CA055FF0056B383 = {
 			isa = PBXGroup;
 			children = (
+				554A12F12CA493380056B383 /* .gitignore */,
 				554A12E82CA36EB80056B383 /* Info.plist */,
 				554A12AF2CA055FF0056B383 /* InspectAR */,
+				554A12ED2CA4896D0056B383 /* Constants.swift */,
+				554A12EF2CA489D10056B383 /* CIAM-Info.plist */,
 				554A12AE2CA055FF0056B383 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -174,7 +183,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				554A12F22CA493380056B383 /* .gitignore in Resources */,
 				554A12B82CA056000056B383 /* Preview Assets.xcassets in Resources */,
+				554A12F02CA489D10056B383 /* CIAM-Info.plist in Resources */,
 				554A12B52CA056000056B383 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -193,6 +204,7 @@
 				554A12C12CA0777A0056B383 /* InspectionView.swift in Sources */,
 				554A12E22CA349230056B383 /* ModelSetupView+File.swift in Sources */,
 				554A12B12CA055FF0056B383 /* AppDelegate.swift in Sources */,
+				554A12EE2CA4896D0056B383 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
