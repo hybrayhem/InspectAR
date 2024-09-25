@@ -5,6 +5,7 @@
 //  Created by hybrayhem.
 //
 
+import Alamofire
 import UniformTypeIdentifiers
 
 extension ModelSetupView {
@@ -20,10 +21,26 @@ extension ModelSetupView {
     }
     
     func uploadFile(fileUrl: URL) { // States: isUploading, isUploadComplete, uploadProgress
-        guard let (name, data) = readFileData(fileUrl: fileUrl) else { return }
+        guard let data = readFileData(fileUrl: fileUrl) else { return }
+        
+        let serverUrl = "http://localhost:31415/stepToObj"
+        
+        AF.upload(data, to: serverUrl)
+            .validate()
+            .uploadProgress { progress in
+                print("Progress: \(progress.fractionCompleted)")
+            }
+            .responseData { response in
+                switch response.result {
+                case .success(let responseData):
+                    print("Response data size: \(responseData.count)")
+                case .failure(let error):
+                    print("File upload failed: \(error)")
+                }
+            }
     }
     
-    func readFileData(fileUrl: URL) -> (String, Data)? {
+    func readFileData(fileUrl: URL) -> Data? {
         // Get file data
         var data: Data
         
@@ -40,10 +57,7 @@ extension ModelSetupView {
         }
         fileUrl.stopAccessingSecurityScopedResource() // release access
         
-        // Get file name
-        let name = fileUrl.lastPathComponent
-        
-        return (name, data)
+        return data
     }
 }
 
