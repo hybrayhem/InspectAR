@@ -16,12 +16,12 @@ enum AlignmentMethod: String, CaseIterable {
 }
 
 struct ModelSetupView: View {
-    @State private var selectedFile: URL?
+    @State internal var selectedFile: URL?
     @State private var isShowingFilePicker = false
     //
     @State private var alignmentMethod = AlignmentMethod.manual
     //
-    @State private var isUploading = false
+    @State internal var isUploading = false
     @State private var uploadProgress: Double = 0.0
     @State private var isUploadComplete = false
     
@@ -52,7 +52,11 @@ struct ModelSetupView: View {
                 
                 // file button
                 Button {
-                    isShowingFilePicker = true
+                    if selectedFile == nil {
+                        isShowingFilePicker = true
+                    } else {
+                        selectedFile = nil
+                    }
                 } label: {
                     if selectedFile == nil {
                         Image(systemName: "arrow.up.doc.fill")
@@ -69,7 +73,13 @@ struct ModelSetupView: View {
                 }
                 .padding(.vertical)
                 .padding(.trailing, 32)
-                
+                // file importer
+                .fileImporter(
+                    isPresented: $isShowingFilePicker,
+                    allowedContentTypes: [.stepExtensionType, .stpExtensionType], // .stepImportType, .item
+                    allowsMultipleSelection: false,
+                    onCompletion: handleFile
+                )
             }
             // file background
             .background(Color.gray.opacity(0.1))
@@ -79,9 +89,6 @@ struct ModelSetupView: View {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(Color.gray.opacity(0.5), style: StrokeStyle(lineWidth: 2, dash: [10, 2]))
             )
-            .sheet(isPresented: $isShowingFilePicker) {
-//                DocumentPicker(selectedFile: $selectedFile)
-            }
             
             // Alignment Method
             HStack {
@@ -138,9 +145,13 @@ struct ModelSetupView: View {
             // Upload/Next Button
             Button(action: {
                 if isUploadComplete {
-                    print("Next button tapped")
+                    print("Next button")
                 } else {
-//                    uploadFile()
+                    // guard let selectedFile = selectedFile else {
+                    //     print("Selected file is nil.")
+                    //     return
+                    // }
+                    uploadFile(fileUrl: selectedFile!) // selectedFile is not nil, else button is disabled
                 }
             }) {
                 Text(isUploadComplete ? "Next" : "Upload")
@@ -154,21 +165,6 @@ struct ModelSetupView: View {
         }
         .padding()
     }
-    
-//    private func uploadFile() {
-//        guard selectedFile != nil else { return }
-//        isUploading = true
-//        // Simulate upload process
-//        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
-//            uploadProgress += 0.1
-//            if uploadProgress >= 1.0 {
-//                timer.invalidate()
-//                isUploading = false
-//                isUploadComplete = true
-//                uploadProgress = 0.0
-//            }
-//        }
-//    }
 }
 
 #Preview {
