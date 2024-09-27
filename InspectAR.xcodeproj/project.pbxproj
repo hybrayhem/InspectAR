@@ -20,6 +20,7 @@
 		554A12EE2CA4896D0056B383 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12ED2CA4896D0056B383 /* Constants.swift */; };
 		554A12F02CA489D10056B383 /* CIAM-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 554A12EF2CA489D10056B383 /* CIAM-Info.plist */; };
 		554A12F22CA493380056B383 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 554A12F12CA493380056B383 /* .gitignore */; };
+		554A12F82CA736C40056B383 /* CombinedGestureModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12F72CA736C40056B383 /* CombinedGestureModifier.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		554A12ED2CA4896D0056B383 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		554A12EF2CA489D10056B383 /* CIAM-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CIAM-Info.plist"; sourceTree = "<group>"; };
 		554A12F12CA493380056B383 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		554A12F72CA736C40056B383 /* CombinedGestureModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombinedGestureModifier.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +76,7 @@
 		554A12AF2CA055FF0056B383 /* InspectAR */ = {
 			isa = PBXGroup;
 			children = (
+				554A12F32CA7366F0056B383 /* Helpers */,
 				554A12B02CA055FF0056B383 /* AppDelegate.swift */,
 				554A12B22CA055FF0056B383 /* RootView.swift */,
 				554A12E02CA3490C0056B383 /* SetupView */,
@@ -117,6 +120,14 @@
 				554A12C02CA0777A0056B383 /* InspectionView.swift */,
 			);
 			path = InspectView;
+			sourceTree = "<group>";
+		};
+		554A12F32CA7366F0056B383 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				554A12F72CA736C40056B383 /* CombinedGestureModifier.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -203,6 +214,7 @@
 				554A12E62CA34E370056B383 /* ModelPreview.swift in Sources */,
 				554A12C12CA0777A0056B383 /* InspectionView.swift in Sources */,
 				554A12E22CA349230056B383 /* ModelSetupView+File.swift in Sources */,
+				554A12F82CA736C40056B383 /* CombinedGestureModifier.swift in Sources */,
 				554A12B12CA055FF0056B383 /* AppDelegate.swift in Sources */,
 				554A12EE2CA4896D0056B383 /* Constants.swift in Sources */,
 			);
