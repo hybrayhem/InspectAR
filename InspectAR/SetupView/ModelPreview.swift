@@ -31,7 +31,7 @@ struct ModelPreview: UIViewRepresentable {
         scnView.autoenablesDefaultLighting = true
         scnView.scene?.background.contents = UIColor.gray.withAlphaComponent(0.2)
         
-        scnView.delegate = context.coordinator
+        overrideGestureRecognizers(to: scnView, context: context)
         
         setupModel(scnView)
         setupCamera(scnView)
@@ -112,30 +112,28 @@ struct ModelPreview: UIViewRepresentable {
     
 }
 
-// MARK: - Coordinator
 extension ModelPreview {
+    private func overrideGestureRecognizers(to scnView: SCNView, context: Context) {
+        for recognizer in scnView.gestureRecognizers ?? [] {
+            recognizer.addTarget(context.coordinator, action: #selector(Coordinator.handleAnyGesture))
+        }
+    }
+    
+    // MARK: - Coordinator
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
     
     class Coordinator: NSObject, SCNSceneRendererDelegate {
         var parent: ModelPreview
-        var lastCameraTransform: SCNMatrix4?
         
         init(_ parent: ModelPreview) {
             self.parent = parent
         }
         
-        func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-            if parent.sceneState.isAnimating {
-                guard let currentCameraNode = renderer.pointOfView else { return }
-                
-                if let lastTransform = lastCameraTransform, !SCNMatrix4EqualToMatrix4(lastTransform, currentCameraNode.transform) {
-                    print("Camera point of view changed")
-                    parent.sceneState.isAnimating = false
-                }
-                
-                lastCameraTransform = currentCameraNode.transform
+        @objc func handleAnyGesture(_ gesture: UIPanGestureRecognizer) {
+            if gesture.state == .began || gesture.state == .changed {
+                parent.sceneState.isAnimating = false
             }
         }
     }
