@@ -84,12 +84,17 @@ struct ModelPreviewView: UIViewRepresentable {
     }
     
     private func updateCamera(_ scnView: SCNView) {
+        
         if sceneState.shouldResetCameraPose,
            let currentCameraNode = scnView.scene?.rootNode.childNode(withName: "camera", recursively: false) {
+            SCNTransaction.begin()
+            SCNTransaction.animationDuration = 0.5
+            
             print("Update Camera")
             setDefaultCameraPose(currentCameraNode)
             scnView.pointOfView = currentCameraNode
             
+            SCNTransaction.commit()
             Task {
                 sceneState.shouldResetCameraPose = false
             }
