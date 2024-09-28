@@ -24,13 +24,7 @@ extension ModelSetupView {
         isUploading = true
         guard let (fileName, fileData) = readFileData(fileUrl: fileUrl) else { return }
         
-//#if targetEnvironment(simulator)
-//        let serverUrl = "http://localhost:31415/stepToObj"
-//#else
-//        let serverUrl = "http://cadprocessor.local:31415/stepToObj"
-//#endif
         let endpointUrl = Constants.API.baseURL + "/stepToObj"
-        
         AF.upload(
             multipartFormData: { multipartFormData in
                 multipartFormData.append(
@@ -45,6 +39,7 @@ extension ModelSetupView {
         .validate()
         .uploadProgress { progress in
             print("Progress: \(progress.fractionCompleted)")
+            uploadProgress = progress.fractionCompleted
         }
         .responseData { response in
             switch response.result {
@@ -53,6 +48,9 @@ extension ModelSetupView {
             case .failure(let error):
                 print("File upload failed: \(error)")
             }
+            
+            isUploading = false
+            isUploadComplete = true
         }
     }
     

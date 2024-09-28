@@ -22,8 +22,10 @@ struct ModelSetupView: View {
     @State private var alignmentMethod = AlignmentMethod.manual
     //
     @State internal var isUploading = false
-    @State private var uploadProgress: Double = 0.0
-    @State private var isUploadComplete = false
+    @State internal var uploadProgress: Double = 0.0
+    @State internal var isUploadComplete = false
+    //
+    @StateObject private var sceneState = SceneState()
     
     private var isUploadDisabled: Bool {
         selectedFile == nil || isUploading
@@ -122,20 +124,44 @@ struct ModelSetupView: View {
                         ProgressView(value: uploadProgress)
                             .progressViewStyle(CircularProgressViewStyle())
                             .controlSize(.large)
-                        Text("Uploading STEP to server...")
+                        Text("Uploading STEP to server... %\(Int(uploadProgress * 100))")
 //                        Text("Converting STEP to OBJ...")
 //                        Text("Extracting face to triangle map...")
-//                        Text("Retrieving OBJ and f-t map...")
 //                        Text("Retrieving OBJ and □ - ▲ map...")
                     }
-//                } else if isUploadComplete {
-//                    SceneView(scene: createScene(), options: [.allowsCameraControl, .autoenablesDefaultLighting])
-//                    .frame(maxWidth: .infinity)
-//                    .aspectRatio(1, contentMode: .fill)
-//                    .cornerRadius(25)
+                } else if isUploadComplete || true {
+                    ModelPreview(sceneState: sceneState)
+                    .frame(maxWidth: .infinity)
+                    .aspectRatio(1, contentMode: .fill)
+                    .cornerRadius(25)
                 } else {
                     Text("No file to preview.")
                         .foregroundColor(.gray)
+                }
+                
+                // corner buttons
+                VStack{
+                    HStack{
+                        Button {
+                            sceneState.isAnimating = true
+                            sceneState.shouldResetCameraPose = true
+                        } label: {
+                            Image(systemName: "house.circle.fill")
+                                .imageScale(.large)
+                                .padding()
+                        }
+                        Spacer()
+                        // TODO:
+//                        Button {
+//                            print("swatchpalette")
+//                            // sceneState.enableFaceColors = true
+//                        } label: {
+//                            Image(systemName: "swatchpalette") // "swatchpalette.fill"
+//                                .imageScale(.medium)
+//                                .padding()
+//                        }
+                    }
+                    Spacer()
                 }
             }
             .padding(10)
