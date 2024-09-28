@@ -57,8 +57,6 @@
 				554A12F12CA493380056B383 /* .gitignore */,
 				554A12E82CA36EB80056B383 /* Info.plist */,
 				554A12AF2CA055FF0056B383 /* InspectAR */,
-				554A12ED2CA4896D0056B383 /* Constants.swift */,
-				554A12EF2CA489D10056B383 /* CIAM-Info.plist */,
 				554A12AE2CA055FF0056B383 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -77,8 +75,7 @@
 				554A12B02CA055FF0056B383 /* AppDelegate.swift */,
 				554A12F32CA7366F0056B383 /* Helpers */,
 				554A12F92CA7E4E00056B383 /* Views */,
-				554A12B42CA056000056B383 /* Assets.xcassets */,
-				554A12B62CA056000056B383 /* Preview Content */,
+				554A12FB2CA7E5CE0056B383 /* Resources */,
 			);
 			path = InspectAR;
 			sourceTree = "<group>";
@@ -120,6 +117,7 @@
 		554A12F32CA7366F0056B383 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				554A12ED2CA4896D0056B383 /* Constants.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -141,6 +139,16 @@
 				554A12B22CA055FF0056B383 /* RootView.swift */,
 			);
 			path = Root;
+			sourceTree = "<group>";
+		};
+		554A12FB2CA7E5CE0056B383 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				554A12B42CA056000056B383 /* Assets.xcassets */,
+				554A12B62CA056000056B383 /* Preview Content */,
+				554A12EF2CA489D10056B383 /* CIAM-Info.plist */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
