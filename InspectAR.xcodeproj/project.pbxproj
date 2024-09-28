@@ -20,6 +20,9 @@
 		554A12EE2CA4896D0056B383 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12ED2CA4896D0056B383 /* Constants.swift */; };
 		554A12F02CA489D10056B383 /* CIAM-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 554A12EF2CA489D10056B383 /* CIAM-Info.plist */; };
 		554A12F22CA493380056B383 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 554A12F12CA493380056B383 /* .gitignore */; };
+		554A12FE2CA8155E0056B383 /* ModelGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12FD2CA8155E0056B383 /* ModelGalleryView.swift */; };
+		554A13002CA829220056B383 /* ModelSetupView+Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12FF2CA829220056B383 /* ModelSetupView+Network.swift */; };
+		554A13022CA82F100056B383 /* ModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A13012CA82F100056B383 /* ModelStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +40,9 @@
 		554A12ED2CA4896D0056B383 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		554A12EF2CA489D10056B383 /* CIAM-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CIAM-Info.plist"; sourceTree = "<group>"; };
 		554A12F12CA493380056B383 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		554A12FD2CA8155E0056B383 /* ModelGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelGalleryView.swift; sourceTree = "<group>"; };
+		554A12FF2CA829220056B383 /* ModelSetupView+Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelSetupView+Network.swift"; sourceTree = "<group>"; };
+		554A13012CA82F100056B383 /* ModelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +99,7 @@
 			children = (
 				554A12BE2CA0775F0056B383 /* ModelSetupView.swift */,
 				554A12E12CA349230056B383 /* ModelSetupView+File.swift */,
+				554A12FF2CA829220056B383 /* ModelSetupView+Network.swift */,
 				554A12E52CA34E370056B383 /* ModelPreviewView.swift */,
 			);
 			path = Setup;
@@ -118,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				554A12ED2CA4896D0056B383 /* Constants.swift */,
+				554A13012CA82F100056B383 /* ModelStore.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -126,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				554A12FA2CA7E5850056B383 /* Root */,
+				554A12FC2CA8154C0056B383 /* Gallery */,
 				554A12E02CA3490C0056B383 /* Setup */,
 				554A12E32CA34D720056B383 /* Align */,
 				554A12E42CA34D7A0056B383 /* Inspect */,
@@ -149,6 +158,14 @@
 				554A12EF2CA489D10056B383 /* CIAM-Info.plist */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		554A12FC2CA8154C0056B383 /* Gallery */ = {
+			isa = PBXGroup;
+			children = (
+				554A12FD2CA8155E0056B383 /* ModelGalleryView.swift */,
+			);
+			path = Gallery;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -230,13 +247,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				554A12BF2CA0775F0056B383 /* ModelSetupView.swift in Sources */,
+				554A13022CA82F100056B383 /* ModelStore.swift in Sources */,
 				554A12DF2CA2C2730056B383 /* ModelAlignView.swift in Sources */,
 				554A12B32CA055FF0056B383 /* RootView.swift in Sources */,
 				554A12E62CA34E370056B383 /* ModelPreviewView.swift in Sources */,
 				554A12C12CA0777A0056B383 /* InspectionView.swift in Sources */,
+				554A13002CA829220056B383 /* ModelSetupView+Network.swift in Sources */,
 				554A12E22CA349230056B383 /* ModelSetupView+File.swift in Sources */,
 				554A12B12CA055FF0056B383 /* AppDelegate.swift in Sources */,
 				554A12EE2CA4896D0056B383 /* Constants.swift in Sources */,
+				554A12FE2CA8155E0056B383 /* ModelGalleryView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

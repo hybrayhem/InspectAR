@@ -25,9 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = window
         window.makeKeyAndVisible()
         
-        // Prevent the device from going to sleep
-        UIApplication.shared.isIdleTimerDisabled = true
-        
+        debugTools()
         return true
     }
 
@@ -48,5 +46,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
 
+    
+    private func debugTools() {
+        #if DEBUG
+        // Prevent the device from going to sleep
+        UIApplication.shared.isIdleTimerDisabled = true
+        #endif
+        
+        #if targetEnvironment(simulator)
+        print(URL.documentsDirectory)
+        #endif
+    }
+    
 }
 

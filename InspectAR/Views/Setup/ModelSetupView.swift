@@ -58,6 +58,7 @@ struct ModelSetupView: View {
                         isShowingFilePicker = true
                     } else {
                         selectedFile = nil
+                        isUploadComplete = false
                     }
                 } label: {
                     if selectedFile == nil {
@@ -80,7 +81,7 @@ struct ModelSetupView: View {
                     isPresented: $isShowingFilePicker,
                     allowedContentTypes: [.stepExtensionType, .stpExtensionType], // .stepImportType, .item
                     allowsMultipleSelection: false,
-                    onCompletion: handleFile
+                    onCompletion: handlePickedFile
                 )
             }
             // file background
@@ -129,7 +130,7 @@ struct ModelSetupView: View {
 //                        Text("Extracting face to triangle map...")
 //                        Text("Retrieving OBJ and □ - ▲ map...")
                     }
-                } else if isUploadComplete || true {
+                } else if isUploadComplete {
                     ModelPreviewView(sceneState: sceneState)
                     .frame(maxWidth: .infinity)
                     .aspectRatio(1, contentMode: .fill)
@@ -177,7 +178,7 @@ struct ModelSetupView: View {
                     //     print("Selected file is nil.")
                     //     return
                     // }
-                    uploadFile(fileUrl: selectedFile!) // selectedFile is not nil, else button is disabled
+                    uploadStepForObj(stepUrl: selectedFile!) // selectedFile is not nil, else button is disabled
                 }
             }) {
                 Text(isUploadComplete ? "Next" : "Upload")

@@ -5,11 +5,10 @@
 //  Created by hybrayhem.
 //
 
-import Alamofire
 import UniformTypeIdentifiers
 
 extension ModelSetupView {
-    func handleFile(result: Result<[URL], Error>) {
+    func handlePickedFile(result: Result<[URL], Error>) {
         switch result {
         case .success(let files):
             guard let fileUrl = files.first else { return } // get file url
@@ -17,40 +16,6 @@ extension ModelSetupView {
             
         case .failure(let error):
             print(error)
-        }
-    }
-    
-    func uploadFile(fileUrl: URL) { // States: isUploading, isUploadComplete, uploadProgress
-        isUploading = true
-        guard let (fileName, fileData) = readFileData(fileUrl: fileUrl) else { return }
-        
-        let endpointUrl = Constants.API.baseURL + "/stepToObj"
-        AF.upload(
-            multipartFormData: { multipartFormData in
-                multipartFormData.append(
-                    fileData,
-                    withName: "file",
-                    fileName: fileName,
-                    mimeType: "model/step"
-                )
-            },
-            to: endpointUrl
-        )
-        .validate()
-        .uploadProgress { progress in
-            print("Progress: \(progress.fractionCompleted)")
-            uploadProgress = progress.fractionCompleted
-        }
-        .responseData { response in
-            switch response.result {
-            case .success(let responseData):
-                print("Response data size: \(responseData.count)")
-            case .failure(let error):
-                print("File upload failed: \(error)")
-            }
-            
-            isUploading = false
-            isUploadComplete = true
         }
     }
     
