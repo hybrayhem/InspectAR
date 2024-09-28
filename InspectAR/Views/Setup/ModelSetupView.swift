@@ -130,7 +130,7 @@ struct ModelSetupView: View {
 //                        Text("Retrieving OBJ and □ - ▲ map...")
                     }
                 } else if isUploadComplete || true {
-                    ModelPreview(sceneState: sceneState)
+                    ModelPreviewView(sceneState: sceneState)
                     .frame(maxWidth: .infinity)
                     .aspectRatio(1, contentMode: .fill)
                     .cornerRadius(25)

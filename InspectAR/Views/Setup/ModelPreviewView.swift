@@ -1,5 +1,5 @@
 //
-//  ModelPreview.swift
+//  ModelPreviewView.swift
 //  InspectAR
 //
 //  Created by hybrayhem.
@@ -20,7 +20,7 @@ class SceneState: ObservableObject {
     }
 }
 
-struct ModelPreview: UIViewRepresentable {
+struct ModelPreviewView: UIViewRepresentable {
     @ObservedObject var sceneState: SceneState
     
     // MARK: - Overrides
@@ -112,7 +112,7 @@ struct ModelPreview: UIViewRepresentable {
     
 }
 
-extension ModelPreview {
+extension ModelPreviewView {
     private func overrideGestureRecognizers(to scnView: SCNView, context: Context) {
         for recognizer in scnView.gestureRecognizers ?? [] {
             recognizer.addTarget(context.coordinator, action: #selector(Coordinator.handleAnyGesture))
@@ -125,9 +125,9 @@ extension ModelPreview {
     }
     
     class Coordinator: NSObject, SCNSceneRendererDelegate {
-        var parent: ModelPreview
+        var parent: ModelPreviewView
         
-        init(_ parent: ModelPreview) {
+        init(_ parent: ModelPreviewView) {
             self.parent = parent
         }
         
@@ -145,7 +145,7 @@ private struct PreviewContainer: View {
     
     var body: some View {
         VStack {
-            ModelPreview(sceneState: sceneState)
+            ModelPreviewView(sceneState: sceneState)
                 .frame(height: 300)
             
             HStack {
