@@ -126,15 +126,18 @@ struct ModelSetupView: View {
                             .progressViewStyle(CircularProgressViewStyle())
                             .controlSize(.large)
                         Text("Uploading STEP to server... %\(Int(uploadProgress * 100))")
-//                        Text("Converting STEP to OBJ...")
-//                        Text("Extracting face to triangle map...")
-//                        Text("Retrieving OBJ and □ - ▲ map...")
+                        // Text("Converting STEP to OBJ...")
+                        // Text("Extracting face to triangle map...")
+                        // Text("Retrieving OBJ and □ - ▲ map...")
                     }
                 } else if isUploadComplete {
                     ModelPreviewView(sceneState: sceneState)
                     .frame(maxWidth: .infinity)
                     .aspectRatio(1, contentMode: .fill)
                     .cornerRadius(25)
+                    .onAppear() {
+                        sceneState.shouldTakeSnapshot = true
+                    }
                 } else {
                     Text("No file to preview.")
                         .foregroundColor(.gray)
@@ -180,10 +183,12 @@ struct ModelSetupView: View {
                     }
                     uploadStepForObj(stepUrl: selectedFile) // Note: selectedFile can't be nil, otherwise the button is disabled
                     
-                    guard let newModel = ModelStore.loadObj(name: selectedFile.lastPathComponent) else {
+                    let fileName = selectedFile.lastPathComponent
+                    guard let newModel = ModelStore.loadObj(name: fileName) else {
                         print("Couldn't load obj: \(selectedFile).")
                         return
                     }
+                    sceneState.name = fileName
                     sceneState.model = newModel.normalized()
                 }
             }) {

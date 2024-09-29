@@ -9,14 +9,17 @@ import SwiftUI
 import SceneKit
 
 class SceneState: ObservableObject {
+    @Published var name: String?
     @Published var model: SCNNode
     @Published var isAnimating: Bool
     @Published var shouldResetCameraPose: Bool
+    @Published var shouldTakeSnapshot: Bool
     
     init() {
         model = SCNNode(geometry: SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0.1))
         isAnimating = true
         shouldResetCameraPose = false
+        shouldTakeSnapshot = false
     }
 }
 
@@ -44,6 +47,7 @@ struct ModelPreviewView: UIViewRepresentable {
         updateModel(uiView)
         updateCamera(uiView)
         updateAnimation(uiView)
+        updateSnapshot(uiView)
     }
     
     // MARK: - Setup
@@ -109,6 +113,15 @@ struct ModelPreviewView: UIViewRepresentable {
         }
     }
     
+    private func updateSnapshot(_ scnView: SCNView) {
+        if sceneState.shouldTakeSnapshot {
+            if let name = sceneState.name {
+                try? ModelStore.saveModel(name: name, png: scnView.snapshot().pngData())
+            }
+            sceneState.shouldTakeSnapshot = false
+        }
+    }
+    
     // MARK: - Helper
     private func setDefaultCameraPose(_ cameraNode: SCNNode) {
         let d: Float = 2.5
@@ -167,6 +180,9 @@ private struct PreviewContainer: View {
                     let pyramid = SCNPyramid(width: 1, height: 1, length: 1)
                     sceneState.model = SCNNode(geometry: pyramid)
                 }
+                Button("Snapshot") {
+                    sceneState.shouldTakeSnapshot = true
+                }
             }
         }
         .onAppear {
@@ -175,11 +191,14 @@ private struct PreviewContainer: View {
     }
     
     func loadObj() {
-        guard let newModel = ModelStore.loadObj(name: "ANC101.step") else {
+//        let fileName = "ANC101.step"
+        let fileName = "engine.stp"
+        guard let newModel = ModelStore.loadObj(name: fileName) else {
             print("Couldn't load obj.")
             return
         }
-        sceneState.model = newModel.normalized(unit: .mm)
+        sceneState.name = fileName
+        sceneState.model = newModel.normalized()
     }
 }
 
