@@ -76,37 +76,12 @@ struct ModelPreviewView: UIViewRepresentable {
     // MARK: - Update
     private func updateModel(_ scnView: SCNView) {
         if let currentModel = scnView.scene?.rootNode.childNode(withName: "model", recursively: false) {
-            // 1. Current Model Based Update
             currentModel.geometry = sceneState.model.geometry
             currentModel.scale = sceneState.model.scale
             currentModel.pivot = sceneState.model.pivot
             
             // currentModel.orientation = sceneState.model.orientation
             currentModel.position = sceneState.model.position
-            
-//            // 2. New Model Based Update
-//            let newModel = sceneState.model.clone()
-//            newModel.name = currentModel.name
-//            scnView.scene?.rootNode.replaceChildNode(currentModel, with: newModel)
-//            
-//            // Transfer actions
-//            newModel.orientation = currentModel.orientation
-//            newModel.isPaused = currentModel.isPaused
-//            print("Actions:")
-//            //  a. copy actions
-//            for key in currentModel.actionKeys {
-//                print(key, terminator: " ")
-//                if let action = currentModel.action(forKey: key)?.copy() as? SCNAction {
-//                    print(action.duration)
-//                    newModel.runAction(action)
-//                }
-//            }
-//            //  b. or recreate actions
-//            newModel.removeAllActions()
-//            setupAnimation(scnView)
-//            for key in newModel.actionKeys {
-//                print(key)
-//            }
         }
     }
     
