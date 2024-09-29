@@ -29,7 +29,7 @@ struct ModelPreviewView: UIViewRepresentable {
         scnView.scene = SCNScene()
         scnView.allowsCameraControl = true
         scnView.autoenablesDefaultLighting = true
-        scnView.scene?.background.contents = UIColor.gray.withAlphaComponent(0.2)
+        scnView.scene?.background.contents = UIColor.green // TODO: gray.withAlphaComponent(0.2)
         
         overrideGestureRecognizers(to: scnView, context: context)
         
@@ -57,6 +57,7 @@ struct ModelPreviewView: UIViewRepresentable {
     private func setupCamera(_ scnView: SCNView) {
         let cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
+        // cameraNode.camera?.usesOrthographicProjection = true
         setDefaultCameraPose(cameraNode)
         
         cameraNode.name = "camera"
@@ -110,9 +111,11 @@ struct ModelPreviewView: UIViewRepresentable {
     
     // MARK: - Helper
     private func setDefaultCameraPose(_ cameraNode: SCNNode) {
-        let d: Float = 1.25
+        let d: Float = 2.5
         cameraNode.position = SCNVector3(d, d, d)
         cameraNode.look(at: SCNVector3(0, 0, 0))
+        
+        // cameraNode.simdPosition = sceneState.model.simdWorldFront * -5
     }
     
 }
@@ -161,8 +164,13 @@ private struct PreviewContainer: View {
                     sceneState.shouldResetCameraPose = true
                 }
                 Button("Change Model") {
-                    let pyramid = SCNPyramid(width: 1, height: 1, length: 1)
-                    sceneState.model = SCNNode(geometry: pyramid)
+                    // let pyramid = SCNPyramid(width: 1, height: 1, length: 1)
+                    // sceneState.model = SCNNode(geometry: pyramid)
+                    guard let newModel = ModelStore.loadObj(name: "ANC101.step") else {
+                        print("Couldn't load obj.")
+                        return
+                    }
+                    sceneState.model = newModel.normalized()
                 }
             }
         }

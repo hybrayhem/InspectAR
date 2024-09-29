@@ -174,11 +174,17 @@ struct ModelSetupView: View {
                 if isUploadComplete {
                     print("Next button")
                 } else {
-                    // guard let selectedFile = selectedFile else {
-                    //     print("Selected file is nil.")
-                    //     return
-                    // }
-                    uploadStepForObj(stepUrl: selectedFile!) // selectedFile is not nil, else button is disabled
+                    guard let selectedFile = selectedFile else {
+                        print("Selected file is nil.")
+                        return
+                    }
+                    uploadStepForObj(stepUrl: selectedFile) // Note: selectedFile can't be nil, otherwise the button is disabled
+                    
+                    guard let newModel = ModelStore.loadObj(name: selectedFile.lastPathComponent) else {
+                        print("Couldn't load obj: \(selectedFile).")
+                        return
+                    }
+                    sceneState.model = newModel.normalized()
                 }
             }) {
                 Text(isUploadComplete ? "Next" : "Upload")
