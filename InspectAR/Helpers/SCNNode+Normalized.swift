@@ -36,6 +36,7 @@ extension SCNNode {
         self.pivot = SCNMatrix4MakeTranslation(center.x, min.y, center.z)
         
         // Debug Prints
+        print(scale)
         print(boundingBox)
         print(boundingSphere)
         

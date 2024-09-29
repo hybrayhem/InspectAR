@@ -76,16 +76,41 @@ struct ModelPreviewView: UIViewRepresentable {
     // MARK: - Update
     private func updateModel(_ scnView: SCNView) {
         if let currentModel = scnView.scene?.rootNode.childNode(withName: "model", recursively: false) {
-            // scnView.scene?.rootNode.replaceChildNode(currentModel, with: sceneState.model)
-            
+            // 1. Current Model Based Update
             currentModel.geometry = sceneState.model.geometry
-            // currentModel.position = sceneState.model.position
+            currentModel.scale = sceneState.model.scale
+            currentModel.pivot = sceneState.model.pivot
+            
             // currentModel.orientation = sceneState.model.orientation
+            currentModel.position = sceneState.model.position
+            
+//            // 2. New Model Based Update
+//            let newModel = sceneState.model.clone()
+//            newModel.name = currentModel.name
+//            scnView.scene?.rootNode.replaceChildNode(currentModel, with: newModel)
+//            
+//            // Transfer actions
+//            newModel.orientation = currentModel.orientation
+//            newModel.isPaused = currentModel.isPaused
+//            print("Actions:")
+//            //  a. copy actions
+//            for key in currentModel.actionKeys {
+//                print(key, terminator: " ")
+//                if let action = currentModel.action(forKey: key)?.copy() as? SCNAction {
+//                    print(action.duration)
+//                    newModel.runAction(action)
+//                }
+//            }
+//            //  b. or recreate actions
+//            newModel.removeAllActions()
+//            setupAnimation(scnView)
+//            for key in newModel.actionKeys {
+//                print(key)
+//            }
         }
     }
     
     private func updateCamera(_ scnView: SCNView) {
-        
         if sceneState.shouldResetCameraPose,
            let currentCameraNode = scnView.scene?.rootNode.childNode(withName: "camera", recursively: false) {
             SCNTransaction.begin()
@@ -164,16 +189,22 @@ private struct PreviewContainer: View {
                     sceneState.shouldResetCameraPose = true
                 }
                 Button("Change Model") {
-                    // let pyramid = SCNPyramid(width: 1, height: 1, length: 1)
-                    // sceneState.model = SCNNode(geometry: pyramid)
-                    guard let newModel = ModelStore.loadObj(name: "ANC101.step") else {
-                        print("Couldn't load obj.")
-                        return
-                    }
-                    sceneState.model = newModel.normalized()
+                    let pyramid = SCNPyramid(width: 1, height: 1, length: 1)
+                    sceneState.model = SCNNode(geometry: pyramid)
                 }
             }
         }
+        .onAppear {
+            loadObj()
+        }
+    }
+    
+    func loadObj() {
+        guard let newModel = ModelStore.loadObj(name: "ANC101.step") else {
+            print("Couldn't load obj.")
+            return
+        }
+        sceneState.model = newModel.normalized(unit: .mm)
     }
 }
 
