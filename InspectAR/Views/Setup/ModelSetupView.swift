@@ -177,11 +177,22 @@ struct ModelSetupView: View {
                 if isUploadComplete {
                     print("Next button")
                 } else {
-                    guard let selectedFile = selectedFile else {
-                        print("Selected file is nil.")
-                        return
+                    guard let selectedFile = selectedFile else { return print("Selected file is nil.") }
+                    isUploading = true
+                    
+                    // uploadStepForObj(stepUrl: selectedFile)
+                    uploadStep(stepUrl: selectedFile) { fileName in
+                        guard let fileName else { return print("Failed to upload step file.") }
+                        print("Uploaded step file: \(fileName).")
+                        
+                        getObj(for: fileName) { success in
+                            if success {
+                                print("Successfully retrieved and saved obj file.")
+                            } else {
+                                print("Failed to retrieve obj file.")
+                            }
+                        }
                     }
-                    uploadStepForObj(stepUrl: selectedFile) // Note: selectedFile can't be nil, otherwise the button is disabled
                     
                     let fileName = selectedFile.lastPathComponent
                     guard let newModel = ModelStore.loadObj(name: fileName) else {
@@ -190,6 +201,9 @@ struct ModelSetupView: View {
                     }
                     sceneState.name = fileName
                     sceneState.model = newModel.normalized()
+                    
+                    isUploading = false
+                    isUploadComplete = true
                 }
             }) {
                 Text(isUploadComplete ? "Next" : "Upload")

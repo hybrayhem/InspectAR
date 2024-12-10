@@ -25,11 +25,11 @@ extension ModelSetupView {
             },
             to: endpointUrl
         )
-        .validate()
         .uploadProgress { progress in
             print("Progress: \(progress.fractionCompleted)")
             uploadProgress = progress.fractionCompleted
         }
+        .validate()
         .responseData { response in
             switch response.result {
             case .success(let responseData):
@@ -47,4 +47,64 @@ extension ModelSetupView {
             isUploadComplete = true
         }
     }
+    
+    func uploadStep(stepUrl: URL, completion: @escaping (String?) -> Void) {
+        guard let (fileName, fileData) = readFileData(fileUrl: stepUrl) else { return completion(nil) }
+        
+        let endpointUrl = Constants.API.baseURL + "/uploadStep"
+        AF.upload(
+            multipartFormData: { multipartFormData in
+                multipartFormData.append(
+                    fileData,
+                    withName: "file",
+                    fileName: fileName,
+                    mimeType: "model/step"
+                )
+            },
+            to: endpointUrl
+        )
+        .validate()
+        .uploadProgress { progress in
+            print("Progress: \(progress.fractionCompleted)")
+            uploadProgress = progress.fractionCompleted
+        }
+        .responseData { response in
+            switch response.result {
+            case .success(let data):
+                let fileName = String(data: data, encoding: .utf8)
+                completion(fileName)
+            case .failure(let error):
+                print("File upload failed: \(error)")
+                completion(nil)
+            }
+        }
+    }
+    
+    func getObj(for fileName: String, completion: @escaping (Bool) -> Void) {
+        let endpointUrl = Constants.API.baseURL + "/getObj"
+        let parameters: [String: Any] = ["fileName": fileName]
+        
+        AF.request(endpointUrl, parameters: parameters)
+        .validate()
+        .responseData { response in
+            switch response.result {
+            case .success(let responseData):
+                print("Response data size: \(responseData.count)")
+                
+                // Save obj
+                do {
+                    try ModelStore.saveModel(name: fileName, obj: responseData)
+                    completion(true)
+                } catch {
+                    print("Failed to save obj: \(error)")
+                    completion(false)
+                }
+                
+            case .failure(let error):
+                print("Failed to get obj: \(error)")
+                completion(false)
+            }
+        }
+    }
+
 }
