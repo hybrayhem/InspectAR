@@ -106,5 +106,31 @@ extension ModelSetupView {
             }
         }
     }
-
+    
+    func getFaceTriMap(for fileName: String, completion: @escaping (Bool) -> Void) {
+        let endpointUrl = Constants.API.baseURL + "/getFaceTriMap"
+        let parameters: [String: Any] = ["fileName": fileName]
+        
+        AF.request(endpointUrl, parameters: parameters)
+        .validate()
+        .responseData { response in
+            switch response.result {
+            case .success(let data):
+                print("Response length: \(data.count)")
+                
+                // Save JSON
+                do {
+                    try modelStore.save(name: fileName, json: data)
+                    completion(true)
+                } catch {
+                    print("Failed to save json: \(error)")
+                    completion(false)
+                }
+                
+            case .failure(let error):
+                print("Failed to get json: \(error)")
+                completion(false)
+            }
+        }
+    }
 }
