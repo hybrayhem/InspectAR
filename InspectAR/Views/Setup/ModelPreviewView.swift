@@ -25,6 +25,7 @@ class SceneState: ObservableObject {
 
 struct ModelPreviewView: UIViewRepresentable {
     @ObservedObject var sceneState: SceneState
+    let modelStore = ModelStore()
     
     // MARK: - Overrides
     func makeUIView(context: Context) -> SCNView {
@@ -116,7 +117,7 @@ struct ModelPreviewView: UIViewRepresentable {
     private func updateSnapshot(_ scnView: SCNView) {
         if sceneState.shouldTakeSnapshot {
             if let name = sceneState.name {
-                try? ModelStore.saveModel(name: name, png: scnView.snapshot().pngData())
+                try? modelStore.save(name: name, png: scnView.snapshot().pngData())
             }
             sceneState.shouldTakeSnapshot = false
         }
@@ -163,6 +164,7 @@ extension ModelPreviewView {
 // MARK: - Preview
 private struct PreviewContainer: View {
     @StateObject private var sceneState = SceneState()
+    let modelStore = ModelStore()
     
     var body: some View {
         VStack {
@@ -191,9 +193,9 @@ private struct PreviewContainer: View {
     }
     
     func loadObj() {
-//        let fileName = "ANC101.step"
-        let fileName = "engine.stp"
-        guard let newModel = ModelStore.loadObj(name: fileName) else {
+        let fileName = "ANC101.step"
+//        let fileName = "engine.stp"
+        guard let newModel = modelStore.load(name: fileName).modelNode else {
             print("Couldn't load obj.")
             return
         }

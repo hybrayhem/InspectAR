@@ -8,18 +8,77 @@
 import SceneKit
 import Foundation
 
-struct ModelStore {
-    private static let fileManager = FileManager.default
-    private static var baseDirectory: URL = .documentsDirectory
+fileprivate enum SubFileNames {
+    static let obj = "model.obj"
+    static let png = "image.png"
+    static let json = "map.json"
+}
+
+struct Model {
+    let name: String
+    private let objURL: URL?
+    private let pngURL: URL?
+    private let jsonURL: URL?
     
-    static func saveModel(name: String, obj: Data? = nil, png: Data? = nil, json: Data? = nil) throws {
-        let modelDirectory = baseDirectory.appendingPathComponent(name, isDirectory: true)
+    init(name: String, objURL: URL? = nil, pngURL: URL? = nil, jsonURL: URL? = nil) {
+        self.name = name
+        self.objURL = objURL
+        self.pngURL = pngURL
+        self.jsonURL = jsonURL
+    }
+    
+    // obj
+    private var _nodeCache: SCNNode? = nil
+    var modelNode: SCNNode? {
+        if _nodeCache == nil, let objURL = objURL {
+            let scene = try? SCNScene(url: objURL)
+            return scene?.rootNode.childNodes.first
+        }
+        return _nodeCache
+    }
+    
+    // png
+    private var _imageCache: UIImage? = nil
+    var modelImage: UIImage? {
+        if _imageCache == nil, let pngURL = pngURL {
+            return UIImage(contentsOfFile: pngURL.path)
+        }
+        return _imageCache
+    }
+    
+    // json
+    private var _jsonCache: [String: Any]? = nil
+    var faceTriMap: [String: Any]? {
+        if _jsonCache == nil, let jsonURL = jsonURL {
+            let jsonString = try? String(contentsOf: jsonURL, encoding: .utf8)
+            guard let jsonData = jsonString?.data(using: .utf8) else { return nil }
+            
+            return try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any]
+        }
+        return _jsonCache
+    }
+}
+
+struct ModelStore {
+    private let fileManager: FileManager
+    private let baseDirectory: URL
+    
+    init(fileManager: FileManager = .default, baseDirectory: URL = .documentsDirectory) {
+        self.fileManager = fileManager
+        self.baseDirectory = baseDirectory
+    }
+    
+    private func modelDirectory (for name: String) -> URL {
+        return baseDirectory.appendingPathComponent(name, isDirectory: true)
+    }
+    
+    func save(name: String, obj: Data? = nil, png: Data? = nil, json: Data? = nil) throws {
+        let modelDirectory = modelDirectory(for: name)
         
-        try fileManager.createDirectory(at: modelDirectory, withIntermediateDirectories: true, attributes: nil)
-        
-        let objURL = modelDirectory.appendingPathComponent("model.obj")
-        let pngURL = modelDirectory.appendingPathComponent("image.png")
-        let jsonURL = modelDirectory.appendingPathComponent("map.json")
+        // Paths
+        let objURL = modelDirectory.appendingPathComponent(SubFileNames.obj)
+        let pngURL = modelDirectory.appendingPathComponent(SubFileNames.png)
+        let jsonURL = modelDirectory.appendingPathComponent(SubFileNames.json)
         
         // Write non-nil values
         try obj?.write(to: objURL)
@@ -27,33 +86,24 @@ struct ModelStore {
         try json?.write(to: jsonURL)
     }
     
-    static func loadObj(name: String) -> SCNNode? {
-        let modelDirectory = baseDirectory.appendingPathComponent(name, isDirectory: true)
-        let objURL = modelDirectory.appendingPathComponent("model.obj")
+    func load(name: String) -> Model {
+        let modelDirectory = modelDirectory(for: name)
+        let objURL = modelDirectory.appendingPathComponent(SubFileNames.obj)
+        let pngURL = modelDirectory.appendingPathComponent(SubFileNames.png)
+        let jsonURL = modelDirectory.appendingPathComponent(SubFileNames.json)
         
-        let scene = try? SCNScene(url: objURL, options: nil)
-        let rootNode = scene?.rootNode.childNodes.first
+        // Check disabled, values are optional
+        // guard fileManager.fileExists(atPath: objURL.path),
+        //       fileManager.fileExists(atPath: pngURL.path),
+        //       fileManager.fileExists(atPath: jsonURL.path) else {
+        //     throw URLError(.fileDoesNotExist)
+        // }
         
-        return rootNode
+        return Model(name: name, objURL: objURL, pngURL: pngURL, jsonURL: jsonURL)
     }
     
-    static func loadPng(name: String) -> UIImage? {
-        let modelDirectory = baseDirectory.appendingPathComponent(name, isDirectory: true)
-        let pngURL = modelDirectory.appendingPathComponent("image.png")
-        
-        // if fileManager.fileExists(atPath: pngURL.path) {}
-        return UIImage(contentsOfFile: pngURL.path)
-    }
-    
-    static func loadJson(name: String) -> [String: Any]? {
-        let modelDirectory = baseDirectory.appendingPathComponent(name, isDirectory: true)
-        let jsonURL = modelDirectory.appendingPathComponent("map.json")
-        
-        guard let jsonString = try? String(contentsOf: jsonURL, encoding: .utf8),
-              let jsonData = jsonString.data(using: .utf8) else { return nil }
-        
-        let jsonDict = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any]
-        
-        return jsonDict
+    func list() -> [String] {
+        let contents = try? fileManager.contentsOfDirectory(at: baseDirectory, includingPropertiesForKeys: [.isDirectoryKey], options: .skipsHiddenFiles)
+        return contents?.compactMap { $0.lastPathComponent } ?? []
     }
 }

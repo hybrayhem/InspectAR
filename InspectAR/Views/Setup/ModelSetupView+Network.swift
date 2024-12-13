@@ -36,7 +36,7 @@ extension ModelSetupView {
                 print("Response data size: \(responseData.count)")
                 
                 // Save obj
-                do { try ModelStore.saveModel(name: fileName, obj: responseData) }
+                do { try modelStore.save(name: fileName, obj: responseData) }
                 catch { print("Failed to save obj: \(error)") }
                 
             case .failure(let error):
@@ -93,7 +93,7 @@ extension ModelSetupView {
                 
                 // Save obj
                 do {
-                    try ModelStore.saveModel(name: fileName, obj: responseData)
+                    try modelStore.save(name: fileName, obj: responseData)
                     completion(true)
                 } catch {
                     print("Failed to save obj: \(error)")
