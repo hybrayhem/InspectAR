@@ -15,14 +15,20 @@ class SceneState: ObservableObject {
     @Published var shouldResetCameraPose: Bool
     @Published var shouldTakeSnapshot: Bool
     
-    init() {
-        model = SCNNode(geometry: SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0.1))
+    init(name: String? = nil, model: SCNNode) {
+        self.name = name
+        self.model = model
         isAnimating = true
         shouldResetCameraPose = false
         shouldTakeSnapshot = false
     }
+    
+    convenience init() {
+        self.init(model: SCNNode(geometry: SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0.1)))
+    }
 }
 
+// TODO: Fix camera pose to fit model
 struct ModelPreviewView: UIViewRepresentable {
     @ObservedObject var sceneState: SceneState
     let modelStore = ModelStore()
