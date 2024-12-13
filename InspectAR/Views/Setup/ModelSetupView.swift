@@ -15,6 +15,7 @@ enum AlignmentMethod: String, CaseIterable {
     case automatic = "Automatic"
 }
 
+// TODO: Refactor to support model initialization
 struct ModelSetupView: View {
     @State internal var selectedFile: URL?
     @State private var isShowingFilePicker = false
@@ -25,11 +26,22 @@ struct ModelSetupView: View {
     @State internal var uploadProgress: Double = 0.0
     @State internal var isUploadComplete = false
     //
-    @StateObject private var sceneState = SceneState()
+    @StateObject private var sceneState: SceneState = SceneState()
+    //
+    let modelStore = ModelStore()
+    
+    init(model: Model? = nil) {
+        if let name = model?.name,
+           let node = model?.modelNode {
+            self._sceneState = StateObject(wrappedValue: SceneState(name: name, model: node))
+            self._isUploadComplete = State(initialValue: true)
+        }
+    }
     
     private var isUploadDisabled: Bool {
         selectedFile == nil || isUploading
     }
+    
     private var uploadButtonColor: Color {
         isUploadDisabled ? .gray : (isUploadComplete ? .blue : .green)
     }
@@ -172,39 +184,9 @@ struct ModelSetupView: View {
             
             Spacer()
             
-            // Upload/Next Button
+            // Upload / Next Button
             Button(action: {
-                if isUploadComplete {
-                    print("Next button")
-                } else {
-                    guard let selectedFile = selectedFile else { return print("Selected file is nil.") }
-                    isUploading = true
-                    
-                    // uploadStepForObj(stepUrl: selectedFile)
-                    uploadStep(stepUrl: selectedFile) { fileName in
-                        guard let fileName else { return print("Failed to upload step file.") }
-                        print("Uploaded step file: \(fileName).")
-                        
-                        getObj(for: fileName) { success in
-                            if success {
-                                print("Successfully retrieved and saved obj file.")
-                            } else {
-                                print("Failed to retrieve obj file.")
-                            }
-                        }
-                    }
-                    
-                    let fileName = selectedFile.lastPathComponent
-                    guard let newModel = ModelStore.loadObj(name: fileName) else {
-                        print("Couldn't load obj: \(selectedFile).")
-                        return
-                    }
-                    sceneState.name = fileName
-                    sceneState.model = newModel.normalized()
-                    
-                    isUploading = false
-                    isUploadComplete = true
-                }
+                isUploadComplete ? handleNextButton() : handleUploadButton()
             }) {
                 Text(isUploadComplete ? "Next" : "Upload")
                     .frame(maxWidth: .infinity)
@@ -216,6 +198,43 @@ struct ModelSetupView: View {
             .disabled(isUploadDisabled)
         }
         .padding()
+        .navigationTitle(sceneState.name ?? "New Model")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    private func handleNextButton() {
+        print("Next button")
+    }
+    
+    private func handleUploadButton() {
+        guard let selectedFile = selectedFile else { return print("Selected file is nil.") }
+        isUploading = true
+        
+        uploadStep(stepUrl: selectedFile) { fileName in
+            guard let fileName else { return print("Failed to upload step file.") }
+            print("Uploaded step file: \(fileName).")
+            
+            getObj(for: fileName) { success in
+                if success {
+                    print("Successfully retrieved and saved obj file.")
+                } else {
+                    print("Failed to retrieve obj file.")
+                }
+            }
+            
+            // TODO: Task queue and get json, png
+        }
+        
+        let fileName = selectedFile.lastPathComponent
+        guard let newModel = modelStore.load(name: fileName).modelNode else {
+            print("Couldn't load obj: \(selectedFile).")
+            return
+        }
+        sceneState.name = fileName
+        sceneState.model = newModel.normalized()
+        
+        isUploading = false
+        isUploadComplete = true
     }
 }
 
