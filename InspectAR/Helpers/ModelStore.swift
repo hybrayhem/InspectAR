@@ -92,12 +92,7 @@ struct ModelStore {
         let pngURL = modelDirectory.appendingPathComponent(SubFileNames.png)
         let jsonURL = modelDirectory.appendingPathComponent(SubFileNames.json)
         
-        // Check disabled, values are optional
-        // guard fileManager.fileExists(atPath: objURL.path),
-        //       fileManager.fileExists(atPath: pngURL.path),
-        //       fileManager.fileExists(atPath: jsonURL.path) else {
-        //     throw URLError(.fileDoesNotExist)
-        // }
+        // No fileExists check, values are optional
         
         return Model(name: name, objURL: objURL, pngURL: pngURL, jsonURL: jsonURL)
     }

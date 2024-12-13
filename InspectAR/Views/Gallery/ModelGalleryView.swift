@@ -23,7 +23,7 @@ struct ModelGalleryView: View {
         self.modelStore = modelStore
     }
     
-    var filteredModels: [ModelItem] {
+    var filteredModelItems: [ModelItem] {
         if searchText.isEmpty {
             return modelItems
         }
@@ -39,12 +39,12 @@ struct ModelGalleryView: View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
                 // Model items
-                ForEach(filteredModels) { model in
+                ForEach(filteredModelItems) { modelItem in
                     let modelSetupDestination = ModelSetupView(
-                        model: modelStore.load(name: model.name)
+                        model: modelStore.load(name: modelItem.name)
                     )
                     NavigationLink(destination: modelSetupDestination) {
-                        ModelItemView(model: model)
+                        ModelItemView(model: modelItem)
                     }
                     .buttonStyle(.plain)
                 }
@@ -61,7 +61,7 @@ struct ModelGalleryView: View {
         .searchable(text: $searchText, prompt: "Search models, .step files")
         .navigationTitle("InspectAR")
         .onAppear {
-            getModels()
+            loadModels()
         }
     }
     
@@ -73,7 +73,7 @@ struct ModelGalleryView: View {
         print("Add new model tapped")
     }
     
-    func getModels() {
+    func loadModels() {
         let modelNames = modelStore.list()
         
         for name in modelNames {
@@ -89,13 +89,12 @@ struct ModelGalleryView: View {
 struct ModelItemView: View {
     let model: ModelItem
     
-//    var action: () -> Void
     var body: some View {
-        let content = VStack(spacing: 8) {
+        return VStack(spacing: 8) {
             Image(uiImage: model.image ?? UIImage(systemName: "cube.transparent.fill")!)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(maxWidth: .infinity) // maxHeight: .infinity
+                .frame(maxWidth: .infinity)
                 .cornerRadius(10)
                 .foregroundColor(.gray)
             Text(model.name)
@@ -103,29 +102,19 @@ struct ModelItemView: View {
                 .lineLimit(2)
                 .multilineTextAlignment(.center)
         }
-        // .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(12)
         .background(Color.gray.opacity(0.2))
         .aspectRatio(1, contentMode: .fit)
         .cornerRadius(12)
-        
-        return content
-//        return Button(action: action) {
-//            content
-//        }
-//        .buttonStyle(.plain)
     }
 }
 
 struct AddNewItem: View {
-//    var action: () -> Void
     var body: some View {
-        let content = VStack {
+        return VStack {
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
                     .fill(LinearGradient(gradient: Gradient(colors: [.blue, .purple]), startPoint: .topLeading, endPoint: .bottomTrailing))
-                    // .frame(maxWidth: .infinity)
-                    // .aspectRatio(1, contentMode: .fit)
 
                 Image(systemName: "plus")
                     .resizable()
@@ -133,23 +122,15 @@ struct AddNewItem: View {
                     .foregroundColor(.white)
                     .padding(20)
             }
-            // .frame(maxWidth: .infinity, maxHeight: .infinity)
 
             Text("Add New")
                 .font(.caption)
                 .foregroundColor(.primary)
         }
-        // .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(12)
         .background(Color.gray.opacity(0.2))
         .aspectRatio(1, contentMode: .fit)
         .cornerRadius(12)
-        
-        return content
-//        return Button(action: action) {
-//            content
-//        }
-//        .buttonStyle(.plain)
     }
 }
 
