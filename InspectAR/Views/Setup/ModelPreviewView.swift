@@ -106,7 +106,7 @@ struct ModelPreviewView: UIViewRepresentable {
             scnView.pointOfView = currentCameraNode
             
             SCNTransaction.commit()
-            Task {
+            DispatchQueue.main.async {
                 sceneState.shouldResetCameraPose = false
             }
         }
@@ -124,7 +124,9 @@ struct ModelPreviewView: UIViewRepresentable {
             if let name = sceneState.name {
                 try? modelStore.save(name: name, png: scnView.snapshot().pngData())
             }
-            sceneState.shouldTakeSnapshot = false
+            DispatchQueue.main.async {
+                sceneState.shouldTakeSnapshot = false
+            }
         }
     }
     
