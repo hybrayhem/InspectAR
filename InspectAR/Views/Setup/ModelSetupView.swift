@@ -15,7 +15,7 @@ enum AlignmentMethod: String, CaseIterable {
     case automatic = "Automatic"
 }
 
-// TODO: Refactor to support model initialization
+// 1. TODO: Refactor to support model initialization
 struct ModelSetupView: View {
     @State internal var selectedFile: URL?
     @State private var isShowingFilePicker = false
@@ -34,6 +34,7 @@ struct ModelSetupView: View {
         if let name = model?.name,
            let node = model?.modelNode {
             self._sceneState = StateObject(wrappedValue: SceneState(name: name, model: node))
+            self._selectedFile = State(initialValue: URL(string: name))
             self._isUploadComplete = State(initialValue: true)
         }
     }
@@ -167,7 +168,7 @@ struct ModelSetupView: View {
                                 .padding()
                         }
                         Spacer()
-                        // TODO:
+                        //  4. TODO: Implement face coloring
 //                        Button {
 //                            print("swatchpalette")
 //                            // sceneState.enableFaceColors = true
@@ -198,7 +199,7 @@ struct ModelSetupView: View {
             .disabled(isUploadDisabled)
         }
         .padding()
-        .navigationTitle(sceneState.name ?? "New Model")
+        .navigationTitle(selectedFile?.lastPathComponent ?? "New Model")
         .navigationBarTitleDisplayMode(.inline)
     }
     
@@ -222,11 +223,11 @@ struct ModelSetupView: View {
                 }
             }
             
-            // TODO: Task queue and get json, png
+            // 3. TODO: Task queue and get json, png
         }
         
         let fileName = selectedFile.lastPathComponent
-        guard let newModel = modelStore.load(name: fileName).modelNode else {
+        guard let newModel = modelStore.load(name: fileName)?.modelNode else {
             print("Couldn't load obj: \(selectedFile).")
             return
         }

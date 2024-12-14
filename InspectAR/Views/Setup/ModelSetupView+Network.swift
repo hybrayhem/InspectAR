@@ -69,22 +69,29 @@ extension ModelSetupView {
             uploadProgress = progress.fractionCompleted
         }
         .responseData { response in
+            let fail = { (message: String) in
+                print(message)
+                completion(nil)
+            }
+            
             switch response.result {
             case .success(let data):
-                let fileName = String(data: data, encoding: .utf8)
-                completion(fileName)
+                if let response = try? JSONSerialization.jsonObject(with: data) as? [String: String],
+                   let fileName = response["filename"] {
+                    return completion(fileName)
+                }
+                fail("Failed to parse file name response")
             case .failure(let error):
-                print("File upload failed: \(error)")
-                completion(nil)
+                fail("File upload failed: \(error)")
             }
         }
     }
     
     func getObj(for fileName: String, completion: @escaping (Bool) -> Void) {
         let endpointUrl = Constants.API.baseURL + "/getObj"
-        let parameters: [String: Any] = ["fileName": fileName]
+        let parameters: [String: String] = ["filename": fileName]
         
-        AF.request(endpointUrl, parameters: parameters)
+        AF.request(endpointUrl, parameters: parameters, encoding: URLEncoding.queryString)
         .validate()
         .responseData { response in
             switch response.result {

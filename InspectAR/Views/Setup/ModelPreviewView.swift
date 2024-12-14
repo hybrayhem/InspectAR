@@ -200,7 +200,7 @@ private struct PreviewContainer: View {
     func loadObj() {
         let fileName = "ANC101.step"
 //        let fileName = "engine.stp"
-        guard let newModel = modelStore.load(name: fileName).modelNode else {
+        guard let newModel = modelStore.load(name: fileName)?.modelNode else {
             print("Couldn't load obj.")
             return
         }

@@ -47,6 +47,17 @@ struct ModelGalleryView: View {
                         ModelItemView(model: modelItem)
                     }
                     .buttonStyle(.plain)
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            withAnimation {
+                                modelStore.delete(name: modelItem.name)
+                                loadModels()
+                            }
+                        } label: {
+                            Label("Delete", systemImage: "x.circle.fill")
+                        }
+
+                    }
                 }
                 
                 // Add New item
@@ -74,14 +85,22 @@ struct ModelGalleryView: View {
     }
     
     func loadModels() {
+        modelItems.removeAll()
         let modelNames = modelStore.list()
         
+//        // Remove items that no longer exist in store
+//        modelItems.removeAll { item in
+//            !modelNames.contains(item.name)
+//        }
+//        
+//        // Add new items that non-existing before
         for name in modelNames {
-            guard !modelItems.contains(where: { $0.name == name }) else { continue }
+//            guard !modelItems.contains(where: { $0.name == name }) else { continue }
             
-            let model = modelStore.load(name: name)
-            let modelItem = ModelItem(name: model.name, image: model.modelImage)
-            modelItems.append(modelItem)
+            if let model = modelStore.load(name: name) {
+                let modelItem = ModelItem(name: model.name, image: model.modelImage)
+                modelItems.append(modelItem)
+            }
         }
     }
 }

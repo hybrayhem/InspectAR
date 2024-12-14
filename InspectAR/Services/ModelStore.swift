@@ -68,12 +68,19 @@ struct ModelStore {
         self.baseDirectory = baseDirectory
     }
     
-    private func modelDirectory (for name: String) -> URL {
-        return baseDirectory.appendingPathComponent(name, isDirectory: true)
+    private func modelDirectory (for name: String) -> URL? {
+        let dir = baseDirectory.appendingPathComponent(name, isDirectory: true)
+        
+        guard fileManager.fileExists(atPath: dir.path) else {
+            try? fileManager.createDirectory(at: dir, withIntermediateDirectories: true)
+            return nil
+        }
+        
+        return dir
     }
     
     func save(name: String, obj: Data? = nil, png: Data? = nil, json: Data? = nil) throws {
-        let modelDirectory = modelDirectory(for: name)
+        guard let modelDirectory = modelDirectory(for: name) else { return }
         
         // Paths
         let objURL = modelDirectory.appendingPathComponent(SubFileNames.obj)
@@ -86,8 +93,9 @@ struct ModelStore {
         try json?.write(to: jsonURL)
     }
     
-    func load(name: String) -> Model {
-        let modelDirectory = modelDirectory(for: name)
+    func load(name: String) -> Model? {
+        guard let modelDirectory = modelDirectory(for: name) else { return nil }
+        
         let objURL = modelDirectory.appendingPathComponent(SubFileNames.obj)
         let pngURL = modelDirectory.appendingPathComponent(SubFileNames.png)
         let jsonURL = modelDirectory.appendingPathComponent(SubFileNames.json)
@@ -95,6 +103,12 @@ struct ModelStore {
         // No fileExists check, values are optional
         
         return Model(name: name, objURL: objURL, pngURL: pngURL, jsonURL: jsonURL)
+    }
+    
+    func delete(name: String) {
+        guard let modelDirectory = modelDirectory(for: name) else { return }
+        
+        try? fileManager.removeItem(at: modelDirectory)
     }
     
     func list() -> [String] {
