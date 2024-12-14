@@ -28,7 +28,6 @@ class SceneState: ObservableObject {
     }
 }
 
-// TODO: Fix camera pose to fit model
 struct ModelPreviewView: UIViewRepresentable {
     @ObservedObject var sceneState: SceneState
     let modelStore = ModelStore()
