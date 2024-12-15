@@ -12,6 +12,7 @@ struct RootView : View {
         NavigationStack {
             ModelGalleryView()
         }
+        // .rotationEffect(.degrees(180))
     }
 }
 

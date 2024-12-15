@@ -118,6 +118,7 @@ struct ModelPreviewView: UIViewRepresentable {
         if let currentModel = scnView.scene?.rootNode.childNode(withName: "model", recursively: false) {
             // currentModel.animationPlayer(forKey: "rotate")?.paused = !sceneState.isAnimating
             currentModel.isPaused = !sceneState.isAnimating
+            print("Animations \(sceneState.isAnimating ? "on" : "off").")
         }
     }
     
