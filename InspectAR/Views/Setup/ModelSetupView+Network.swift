@@ -91,7 +91,7 @@ extension ModelSetupView {
         let endpointUrl = Constants.API.baseURL + "/getObj"
         let parameters: [String: String] = ["filename": fileName]
         
-        AF.request(endpointUrl, parameters: parameters, encoding: URLEncoding.queryString)
+        AF.request(endpointUrl, parameters: parameters)
         .validate()
         .responseData { response in
             switch response.result {
@@ -116,7 +116,7 @@ extension ModelSetupView {
     
     func getFaceTriMap(for fileName: String, completion: @escaping (Bool) -> Void) {
         let endpointUrl = Constants.API.baseURL + "/getFaceTriMap"
-        let parameters: [String: Any] = ["fileName": fileName]
+        let parameters: [String: String] = ["fileName": fileName]
         
         AF.request(endpointUrl, parameters: parameters)
         .validate()

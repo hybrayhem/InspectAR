@@ -38,7 +38,7 @@ struct ModelPreviewView: UIViewRepresentable {
         scnView.scene = SCNScene()
         scnView.allowsCameraControl = true
         scnView.autoenablesDefaultLighting = true
-        scnView.scene?.background.contents = UIColor.green // TODO: gray.withAlphaComponent(0.2)
+        scnView.scene?.background.contents = UIColor.systemIndigo // gray.withAlphaComponent(0.2)
         
         overrideGestureRecognizers(to: scnView, context: context)
         
@@ -106,6 +106,8 @@ struct ModelPreviewView: UIViewRepresentable {
             scnView.pointOfView = currentCameraNode
             
             SCNTransaction.commit()
+            
+            // Task {
             DispatchQueue.main.async {
                 sceneState.shouldResetCameraPose = false
             }
@@ -124,6 +126,7 @@ struct ModelPreviewView: UIViewRepresentable {
             if let name = sceneState.name {
                 try? modelStore.save(name: name, png: scnView.snapshot().pngData())
             }
+            
             DispatchQueue.main.async {
                 sceneState.shouldTakeSnapshot = false
             }

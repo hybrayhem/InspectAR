@@ -15,7 +15,7 @@ enum AlignmentMethod: String, CaseIterable {
     case automatic = "Automatic"
 }
 
-// 1. TODO: Refactor to support model initialization
+// 1. TODO: Fix preview states
 struct ModelSetupView: View {
     @State internal var selectedFile: URL?
     @State private var isShowingFilePicker = false
@@ -28,13 +28,14 @@ struct ModelSetupView: View {
     //
     @StateObject private var sceneState: SceneState = SceneState()
     //
+    @State private var model: Model?
     let modelStore = ModelStore()
     
     init(model: Model? = nil) {
-        if let name = model?.name,
-           let node = model?.modelNode {
-            self._sceneState = StateObject(wrappedValue: SceneState(name: name, model: node))
-            self._selectedFile = State(initialValue: URL(string: name))
+        //        self.model = model
+        self._model = State(initialValue: model)
+        if let model {
+            self._selectedFile = State(initialValue: URL(string: model.name))
             self._isUploadComplete = State(initialValue: true)
         }
     }
@@ -145,12 +146,24 @@ struct ModelSetupView: View {
                     }
                 } else if isUploadComplete {
                     ModelPreviewView(sceneState: sceneState)
-                    .frame(maxWidth: .infinity)
-                    .aspectRatio(1, contentMode: .fill)
-                    .cornerRadius(25)
-                    .onAppear() {
-                        sceneState.shouldTakeSnapshot = true
-                    }
+                        .frame(maxWidth: .infinity)
+                        .aspectRatio(1, contentMode: .fill)
+                        .cornerRadius(25)
+                        .onAppear() {
+                            print("Setting up model preview.")
+                            // Model
+                            sceneState.name = model?.name
+                            if let node = model?.modelNode?.normalized() {
+                                sceneState.model = node
+                            }
+                            // Animation
+                            sceneState.isAnimating = false // FIX: Remove workaround
+                            DispatchQueue.main.async {
+                                sceneState.isAnimating = true
+                            }
+                            // Snapshot
+                            sceneState.shouldTakeSnapshot = true
+                        }
                 } else {
                     Text("No file to preview.")
                         .foregroundColor(.gray)

@@ -10,6 +10,6 @@ import Foundation
 
 extension SCNCamera {
     func zoomToFit(model: SCNNode) {
-        // 2. TODO: Implement zoomToFit
+        // TODO: Implement zoomToFit
     }
 }
