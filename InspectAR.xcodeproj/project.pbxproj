@@ -26,6 +26,8 @@
 		554A13022CA82F100056B383 /* ModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A13012CA82F100056B383 /* ModelStore.swift */; };
 		554A13042CA9D1900056B383 /* SCNNode+Normalized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A13032CA9D1900056B383 /* SCNNode+Normalized.swift */; };
 		554A13062CA9D4220056B383 /* SCNCamera+ZoomToFit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A13052CA9D4220056B383 /* SCNCamera+ZoomToFit.swift */; };
+		55B9C8DB2D1C8AD100491D63 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9C8DA2D1C8AD100491D63 /* Model.swift */; };
+		55B9C8DD2D1C8B0E00491D63 /* RawGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9C8DC2D1C8B0E00491D63 /* RawGeometry.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +51,8 @@
 		554A13012CA82F100056B383 /* ModelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelStore.swift; sourceTree = "<group>"; };
 		554A13032CA9D1900056B383 /* SCNNode+Normalized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNNode+Normalized.swift"; sourceTree = "<group>"; };
 		554A13052CA9D4220056B383 /* SCNCamera+ZoomToFit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNCamera+ZoomToFit.swift"; sourceTree = "<group>"; };
+		55B9C8DA2D1C8AD100491D63 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		55B9C8DC2D1C8B0E00491D63 /* RawGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawGeometry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +100,7 @@
 			children = (
 				554A12B02CA055FF0056B383 /* AppDelegate.swift */,
 				5510668F2D0DC2CF0093DEBA /* Services */,
+				55B9C8D92D1C8AC000491D63 /* Models */,
 				554A12F92CA7E4E00056B383 /* Views */,
 				554A12F32CA7366F0056B383 /* Helpers */,
 				554A12FB2CA7E5CE0056B383 /* Resources */,
@@ -185,6 +190,15 @@
 			path = Gallery;
 			sourceTree = "<group>";
 		};
+		55B9C8D92D1C8AC000491D63 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				55B9C8DA2D1C8AD100491D63 /* Model.swift */,
+				55B9C8DC2D1C8B0E00491D63 /* RawGeometry.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -263,7 +277,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55B9C8DB2D1C8AD100491D63 /* Model.swift in Sources */,
 				554A12BF2CA0775F0056B383 /* ModelSetupView.swift in Sources */,
+				55B9C8DD2D1C8B0E00491D63 /* RawGeometry.swift in Sources */,
 				554A13042CA9D1900056B383 /* SCNNode+Normalized.swift in Sources */,
 				554A13022CA82F100056B383 /* ModelStore.swift in Sources */,
 				554A12DF2CA2C2730056B383 /* ModelAlignView.swift in Sources */,
