@@ -28,6 +28,7 @@
 		554A13062CA9D4220056B383 /* SCNCamera+ZoomToFit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A13052CA9D4220056B383 /* SCNCamera+ZoomToFit.swift */; };
 		55B9C8DB2D1C8AD100491D63 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9C8DA2D1C8AD100491D63 /* Model.swift */; };
 		55B9C8DD2D1C8B0E00491D63 /* RawGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9C8DC2D1C8B0E00491D63 /* RawGeometry.swift */; };
+		55B9C8DF2D1D10CE00491D63 /* GeometryBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9C8DE2D1D10CE00491D63 /* GeometryBridge.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		554A13052CA9D4220056B383 /* SCNCamera+ZoomToFit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNCamera+ZoomToFit.swift"; sourceTree = "<group>"; };
 		55B9C8DA2D1C8AD100491D63 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		55B9C8DC2D1C8B0E00491D63 /* RawGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawGeometry.swift; sourceTree = "<group>"; };
+		55B9C8DE2D1D10CE00491D63 /* GeometryBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryBridge.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +75,7 @@
 				554A12ED2CA4896D0056B383 /* Constants.swift */,
 				554A13012CA82F100056B383 /* ModelStore.swift */,
 				551066902D0DC2E10093DEBA /* APIManager.swift */,
+				55B9C8DE2D1D10CE00491D63 /* GeometryBridge.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -280,6 +283,7 @@
 				55B9C8DB2D1C8AD100491D63 /* Model.swift in Sources */,
 				554A12BF2CA0775F0056B383 /* ModelSetupView.swift in Sources */,
 				55B9C8DD2D1C8B0E00491D63 /* RawGeometry.swift in Sources */,
+				55B9C8DF2D1D10CE00491D63 /* GeometryBridge.swift in Sources */,
 				554A13042CA9D1900056B383 /* SCNNode+Normalized.swift in Sources */,
 				554A13022CA82F100056B383 /* ModelStore.swift in Sources */,
 				554A12DF2CA2C2730056B383 /* ModelAlignView.swift in Sources */,

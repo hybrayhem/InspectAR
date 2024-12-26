@@ -24,7 +24,7 @@ struct Model {
     // obj
     private var _nodeCache: SCNNode? = nil
     var modelNode: SCNNode? {
-        if _nodeCache == nil, let objURL = objURL {
+        if _nodeCache == nil, let objURL {          
             let scene = try? SCNScene(url: objURL)
             return scene?.rootNode.childNodes.first
         }
@@ -34,7 +34,7 @@ struct Model {
     // png
     private var _imageCache: UIImage? = nil
     var modelImage: UIImage? {
-        if _imageCache == nil, let pngURL = pngURL {
+        if _imageCache == nil, let pngURL {
             return UIImage(contentsOfFile: pngURL.path)
         }
         return _imageCache
@@ -43,7 +43,7 @@ struct Model {
     // json
     private var _jsonCache: [String: Any]? = nil
     var faceTriMap: [String: Any]? {
-        if _jsonCache == nil, let jsonURL = jsonURL {
+        if _jsonCache == nil, let jsonURL {
             let jsonString = try? String(contentsOf: jsonURL, encoding: .utf8)
             guard let jsonData = jsonString?.data(using: .utf8) else { return nil }
             

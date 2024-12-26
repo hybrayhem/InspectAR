@@ -32,7 +32,6 @@ struct ModelSetupView: View {
     let modelStore = ModelStore()
     
     init(model: Model? = nil) {
-        //        self.model = model
         self._model = State(initialValue: model)
         if let model {
             self._selectedFile = State(initialValue: URL(string: model.name))
@@ -223,81 +222,45 @@ struct ModelSetupView: View {
     private func handleUploadButton() {
         guard let selectedFile = selectedFile else { return print("Selected file is nil.") }
         isUploading = true
+        isUploadComplete = false
         
-        let group = DispatchGroup()
-        Task {
-            await handleUploadStep(file: selectedFile, group)
-        }
-        handleGetObj(group)
-        handleGetFaceTriMap(group)
-        
-        group.notify(queue: .main) {
-            loadNewModel()
-            
-            isUploading = false
-            isUploadComplete = true
-        }
-    }
-    
-    private func handleUploadStep(file: URL, _ group: DispatchGroup) async {
-        group.enter()
-        uploadStep(stepUrl: file) { fileName in
+        uploadStep(stepUrl: selectedFile) { fileName in
             guard let fileName else {
-                group.leave()
+                isUploading = false
                 return print("Failed to upload step file.")
             }
             print("Uploaded step file: \(fileName).")
             
-            sceneState.name = fileName
-            group.leave()
-        }
-    }
-    
-    private func handleGetObj(_ group: DispatchGroup) {
-        guard let fileName = sceneState.name else { return }
-        
-        group.wait()
-        group.enter()
-        getObj(for: fileName) { success in
-            if success {
+            getObj(for: fileName) { success in
+                guard success else {
+                    isUploading = false
+                    return print("Failed to retrieve obj file.")
+                }
                 print("Successfully retrieved and saved obj file.")
-            } else {
-                print("Failed to retrieve obj file.")
+                
+//                getFaceTriMap(for: fileName) { success in
+//                    guard success else {
+//                        isUploading = false
+//                        return print("Failed to retrieve json file.")
+//                    }
+//                    print("Successfully retrieved and saved json file.")
+                    
+                    loadNewModel(fileName: fileName)
+                    isUploading = false
+                    isUploadComplete = true
+//                }
             }
-            group.leave()
         }
+
     }
     
-    private func handleGetFaceTriMap(_ group: DispatchGroup) {
-        guard let fileName = sceneState.name else { return }
-        
-        group.wait()
-        group.enter()
-        getFaceTriMap(for: fileName) { success in
-            if success {
-                print("Successfully retrieved and saved json file.")
-            } else {
-                print("Failed to retrieve json file.")
-            }
-            group.leave()
-        }
-    }
-    
-    private func loadNewModel() {
-        guard let fileName = sceneState.name else { return }
-        
+    private func loadNewModel(fileName: String) {
         guard let newModel = modelStore.load(name: fileName) else {
             print("Couldn't load obj: \(fileName).")
             return
         }
         self.model = newModel
     }
-    //        guard let newModel = modelStore.load(name: fileName)?.modelNode else {
-    //            print("Couldn't load obj: \(fileName).")
-    //            return
-    //        }
-    //        sceneState.model = newModel.normalized()
-    // }
 }
 
 #Preview {
