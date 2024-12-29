@@ -108,6 +108,8 @@ struct ModelGalleryView: View {
 struct ModelItemView: View {
     let model: ModelItem
     
+    let lineSpacing: CGFloat = 2
+    
     var body: some View {
         return VStack(spacing: 8) {
             Image(uiImage: model.image ?? UIImage(systemName: "cube.transparent.fill")!)
@@ -120,6 +122,8 @@ struct ModelItemView: View {
                 .font(.caption)
                 .lineLimit(2)
                 .multilineTextAlignment(.center)
+                .lineSpacing(lineSpacing)
+                .frame(height: UIFont.textHeight(font: .caption1, lineCount: 2, lineSpacing: lineSpacing))
         }
         .padding(12)
         .background(Color.gray.opacity(0.2))

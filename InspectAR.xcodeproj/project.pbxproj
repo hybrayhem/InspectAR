@@ -30,6 +30,7 @@
 		55B9C8DD2D1C8B0E00491D63 /* RawGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9C8DC2D1C8B0E00491D63 /* RawGeometry.swift */; };
 		55B9C8DF2D1D10CE00491D63 /* GeometryBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9C8DE2D1D10CE00491D63 /* GeometryBridge.swift */; };
 		55B9C8E12D21A90F00491D63 /* SCNGeometry+Colorize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9C8E02D21A90F00491D63 /* SCNGeometry+Colorize.swift */; };
+		55C594042D22016B007079FE /* UIFont+TextHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C594032D22016B007079FE /* UIFont+TextHeight.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +58,7 @@
 		55B9C8DC2D1C8B0E00491D63 /* RawGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawGeometry.swift; sourceTree = "<group>"; };
 		55B9C8DE2D1D10CE00491D63 /* GeometryBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryBridge.swift; sourceTree = "<group>"; };
 		55B9C8E02D21A90F00491D63 /* SCNGeometry+Colorize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNGeometry+Colorize.swift"; sourceTree = "<group>"; };
+		55C594032D22016B007079FE /* UIFont+TextHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+TextHeight.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,6 +156,7 @@
 				554A13032CA9D1900056B383 /* SCNNode+Normalized.swift */,
 				554A13052CA9D4220056B383 /* SCNCamera+ZoomToFit.swift */,
 				55B9C8E02D21A90F00491D63 /* SCNGeometry+Colorize.swift */,
+				55C594032D22016B007079FE /* UIFont+TextHeight.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -301,6 +304,7 @@
 				554A12B12CA055FF0056B383 /* AppDelegate.swift in Sources */,
 				554A12EE2CA4896D0056B383 /* Constants.swift in Sources */,
 				554A12FE2CA8155E0056B383 /* ModelGalleryView.swift in Sources */,
+				55C594042D22016B007079FE /* UIFont+TextHeight.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
