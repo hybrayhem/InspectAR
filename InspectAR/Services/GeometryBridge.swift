@@ -120,6 +120,34 @@ struct GeometryBridge {
         return face
     }
     
+    func getGroupNames(from objs: String) -> [String] {
+        var names: [String] = []
+        
+        let lines = objs.components(separatedBy: .newlines)
+        for line in lines {
+            if line.starts(with: "g ") {
+                let name = String(line.dropFirst(2))
+                names.append(name)
+            }
+        }
+        return names
+    }
+    
+    func getVertexCounts(from objs: String) -> [Int] {
+        var counts: [Int] = []
+        
+        let lines = objs.components(separatedBy: .newlines)
+        for line in lines {
+            if line.starts(with: "g ") {
+                counts.append(0)
+            } else if line.starts(with: "v ") {
+                guard counts.count > 0 else { continue }
+                counts[counts.count - 1] += 1
+            }
+        }
+        return counts
+    }
+    
     func toSceneGeometry(rawg: RawGeometry) -> SCNGeometry {
         // Vertices
         var allVertices: [SCNVector3] = []
@@ -142,27 +170,18 @@ struct GeometryBridge {
         }
         let normalsSource = SCNGeometrySource(normals: allNormals)
         
-        // Vertex Colors // TODO: Get colors from obj
-        var colors: [SCNVector3] = []
-        for group in rawg.groups {
-            let r = Float.random(in: 0...1)
-            let g = Float.random(in: 0...1)
-            let b = Float.random(in: 0...1)
-            
-            colors.append(contentsOf: group.vertices.map { _ in
-                return SCNVector3(r, g, b)
-            })
-        }
-        let colorSource = SCNGeometrySource(
-            data: NSData(bytes: colors, length: MemoryLayout<SCNVector3>.size * colors.count) as Data,
-            semantic: .color,
-            vectorCount: colors.count,
-            usesFloatComponents: true,
-            componentsPerVector: 3,
-            bytesPerComponent: MemoryLayout<Float>.size,
-            dataOffset: 0,
-            dataStride: MemoryLayout<SCNVector3>.size
-        )
+        // Vertex Colors
+        // var allColors: [SCNVector3] = [] // TODO: Get all colors from obj
+        // let colorSource = SCNGeometrySource(
+        //     data: NSData(bytes: allColors, length: MemoryLayout<SCNVector3>.size * allColors.count) as Data,
+        //     semantic: .color,
+        //     vectorCount: allColors.count,
+        //     usesFloatComponents: true,
+        //     componentsPerVector: 3,
+        //     bytesPerComponent: MemoryLayout<Float>.size,
+        //     dataOffset: 0,
+        //     dataStride: MemoryLayout<SCNVector3>.size
+        // )
         
         // Elements for each group
         var elements: [SCNGeometryElement] = []
@@ -173,7 +192,7 @@ struct GeometryBridge {
         }
         
         // Build Geometry
-        let sources = [positionSource, textureSource, normalsSource, colorSource].filter { !$0.data.isEmpty }
+        let sources = [positionSource, textureSource, normalsSource/*, colorSource*/].filter { !$0.data.isEmpty }
         let scng = SCNGeometry(sources: sources, elements: elements)
         
         return scng

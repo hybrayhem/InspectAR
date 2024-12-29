@@ -29,6 +29,7 @@ struct ModelSetupView: View {
     @StateObject private var sceneState: SceneState = SceneState()
     //
     @State private var model: Model?
+    @State private var isModelColored = false
     let modelStore = ModelStore()
     
     init(model: Model? = nil) {
@@ -152,7 +153,7 @@ struct ModelSetupView: View {
                             print("Setting up model preview.")
                             // Model
                             sceneState.name = model?.name
-                            if let node = model?.modelNode?.normalized() {
+                            if let node = model?.scnNode?.normalized() {
                                 sceneState.model = node
                             }
                             // Animation
@@ -161,7 +162,9 @@ struct ModelSetupView: View {
                                 sceneState.isAnimating = true
                             }
                             // Snapshot
-                            sceneState.shouldTakeSnapshot = true
+                            DispatchQueue.main.async {
+                                sceneState.shouldTakeSnapshot = true
+                            }
                         }
                 } else {
                     Text("No file to preview.")
@@ -180,15 +183,23 @@ struct ModelSetupView: View {
                                 .padding()
                         }
                         Spacer()
-                        //  4. TODO: Implement face coloring
-//                        Button {
-//                            print("swatchpalette")
-//                            // sceneState.enableFaceColors = true
-//                        } label: {
-//                            Image(systemName: "swatchpalette") // "swatchpalette.fill"
-//                                .imageScale(.medium)
-//                                .padding()
-//                        }
+                        Button {
+                            let node = sceneState.model
+                            
+                            if isModelColored {
+                                node.geometry = node.geometry?.clearColors()
+                            } else {
+                                if let vertexCounts = model?.vertexCounts {
+                                    node.geometry = node.geometry?.colorizeElementsRandom(vertexCounts: vertexCounts)
+                                }
+                            }
+                            isModelColored.toggle()
+                            sceneState.shouldUpdateScene = true
+                        } label: {
+                            Image(systemName: isModelColored ? "swatchpalette.fill" : "swatchpalette")
+                                .imageScale(.medium)
+                                .padding()
+                        }
                     }
                     Spacer()
                 }

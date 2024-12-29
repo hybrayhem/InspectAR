@@ -11,6 +11,7 @@ import SceneKit
 class SceneState: ObservableObject {
     @Published var name: String?
     @Published var model: SCNNode
+    @Published var shouldUpdateScene: Bool
     @Published var isAnimating: Bool
     @Published var shouldResetCameraPose: Bool
     @Published var shouldTakeSnapshot: Bool
@@ -18,6 +19,7 @@ class SceneState: ObservableObject {
     init(name: String? = nil, model: SCNNode) {
         self.name = name
         self.model = model
+        shouldUpdateScene = false
         isAnimating = true
         shouldResetCameraPose = false
         shouldTakeSnapshot = false
@@ -54,6 +56,10 @@ struct ModelPreviewView: UIViewRepresentable {
         updateCamera(uiView)
         updateAnimation(uiView)
         updateSnapshot(uiView)
+        
+        DispatchQueue.main.async {
+            sceneState.shouldUpdateScene = false
+        }
     }
     
     // MARK: - Setup
@@ -204,9 +210,10 @@ private struct PreviewContainer: View {
     }
     
     func loadObj() {
-        let fileName = "ANC101.step"
+        let fileName = "Caster.step"
+//        let fileName = "ANC101.step"
 //        let fileName = "engine.stp"
-        guard let newModel = modelStore.load(name: fileName)?.modelNode else {
+        guard let newModel = modelStore.load(name: fileName)?.scnNode else {
             print("Couldn't load obj.")
             return
         }

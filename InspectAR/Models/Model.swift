@@ -22,33 +22,61 @@ struct Model {
     }
     
     // obj
-    lazy var scnNode: SCNNode? = {
+    private var _nodeCache: SCNNode? = nil
+    var scnNode: SCNNode? {
+        if _nodeCache == nil, let objURL {
+            if let objString = try? String(contentsOf: objURL, encoding: .utf8) {
+                let geometryBridge = GeometryBridge()
+                let rawGeometry = geometryBridge.fromObj(objString)
+                let scnGeometry = geometryBridge.toSceneGeometry(rawg: rawGeometry)
+                return SCNNode(geometry: scnGeometry)
+            }
+            
+            let scene = try? SCNScene(url: objURL)
+            return scene?.rootNode.childNodes.first
+        }
+        return _nodeCache
+    }
+    
+    // obj properties
+    lazy var groupNames: [String]? = {
         guard let objURL else { return nil }
         
         if let objString = try? String(contentsOf: objURL, encoding: .utf8) {
             let geometryBridge = GeometryBridge()
-            let rawGeometry = geometryBridge.fromObj(objString)
-            let scnGeometry = geometryBridge.toSceneGeometry(rawg: rawGeometry)
-            return SCNNode(geometry: scnGeometry)
+            return geometryBridge.getGroupNames(from: objString)
         }
+       return nil
+    }()
+    
+    lazy var vertexCounts: [Int]? = {
+        guard let objURL else { return nil }
         
-        let scene = try? SCNScene(url: objURL)
-        return scene?.rootNode.childNodes.first
-    }() // lazy closures for caching
+        if let objString = try? String(contentsOf: objURL, encoding: .utf8) {
+            let geometryBridge = GeometryBridge()
+            return geometryBridge.getVertexCounts(from: objString)
+        }
+       return nil
+    }()
     
     // png
-    lazy var modelImage: UIImage? = {
-        guard let pngURL else { return nil }
-        return UIImage(contentsOfFile: pngURL.path)
-    }()
+    private var _imageCache: UIImage? = nil
+    var modelImage: UIImage? {
+        if _imageCache == nil, let pngURL {
+            return UIImage(contentsOfFile: pngURL.path)
+        }
+        return _imageCache
+    }
     
     // json
-    lazy var faceTriMap: [String: Any]? = {
-        guard let jsonURL else { return nil }
-        
-        let jsonString = try? String(contentsOf: jsonURL, encoding: .utf8)
-        guard let jsonData = jsonString?.data(using: .utf8) else { return nil }
-        
-        return try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any]
-    }()
+    private var _jsonCache: [String: Any]? = nil
+    var faceTriMap: [String: Any]? {
+        if _jsonCache == nil, let jsonURL {
+            let jsonString = try? String(contentsOf: jsonURL, encoding: .utf8)
+            guard let jsonData = jsonString?.data(using: .utf8) else { return nil }
+            
+            return try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any]
+        }
+        return _jsonCache
+    }
 }
