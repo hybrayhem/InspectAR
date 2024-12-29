@@ -22,39 +22,33 @@ struct Model {
     }
     
     // obj
-    private var _nodeCache: SCNNode? = nil
-    var modelNode: SCNNode? {
-        if _nodeCache == nil, let objURL {
-            if let objString = try? String(contentsOf: objURL, encoding: .utf8) {
-                let rawGeometry = GeometryBridge().fromObj(objString)
-                let scnGeometry = GeometryBridge().toSceneGeometry(rawg: rawGeometry)
-                return SCNNode(geometry: scnGeometry)
-            }
-            
-            let scene = try? SCNScene(url: objURL)
-            return scene?.rootNode.childNodes.first
+    lazy var scnNode: SCNNode? = {
+        guard let objURL else { return nil }
+        
+        if let objString = try? String(contentsOf: objURL, encoding: .utf8) {
+            let geometryBridge = GeometryBridge()
+            let rawGeometry = geometryBridge.fromObj(objString)
+            let scnGeometry = geometryBridge.toSceneGeometry(rawg: rawGeometry)
+            return SCNNode(geometry: scnGeometry)
         }
-        return _nodeCache
-    }
+        
+        let scene = try? SCNScene(url: objURL)
+        return scene?.rootNode.childNodes.first
+    }() // lazy closures for caching
     
     // png
-    private var _imageCache: UIImage? = nil
-    var modelImage: UIImage? {
-        if _imageCache == nil, let pngURL {
-            return UIImage(contentsOfFile: pngURL.path)
-        }
-        return _imageCache
-    }
+    lazy var modelImage: UIImage? = {
+        guard let pngURL else { return nil }
+        return UIImage(contentsOfFile: pngURL.path)
+    }()
     
     // json
-    private var _jsonCache: [String: Any]? = nil
-    var faceTriMap: [String: Any]? {
-        if _jsonCache == nil, let jsonURL {
-            let jsonString = try? String(contentsOf: jsonURL, encoding: .utf8)
-            guard let jsonData = jsonString?.data(using: .utf8) else { return nil }
-            
-            return try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any]
-        }
-        return _jsonCache
-    }
+    lazy var faceTriMap: [String: Any]? = {
+        guard let jsonURL else { return nil }
+        
+        let jsonString = try? String(contentsOf: jsonURL, encoding: .utf8)
+        guard let jsonData = jsonString?.data(using: .utf8) else { return nil }
+        
+        return try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any]
+    }()
 }
