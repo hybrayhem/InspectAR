@@ -39,7 +39,7 @@ struct ModelPreviewView: UIViewRepresentable {
         scnView.allowsCameraControl = true
         scnView.autoenablesDefaultLighting = true
         scnView.scene?.background.contents = UIColor.systemIndigo // gray.withAlphaComponent(0.2)
-        
+        scnView.debugOptions = .showBoundingBoxes
         overrideGestureRecognizers(to: scnView, context: context)
         
         setupModel(scnView)

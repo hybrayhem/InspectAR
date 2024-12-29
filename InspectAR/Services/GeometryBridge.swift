@@ -23,9 +23,9 @@ struct GeometryBridge {
             
             switch components[0] {
             case "g":
-                // "g name"
-                if components.count == 2 {
-                    let name = components[1]
+                // "g name name ..."
+                if components.count > 1 {
+                    let name = components[1...].joined(separator: " ")
                     rawg.groups.append(RawGeometry.Group(name: name))
                 }
             case "v":
@@ -45,6 +45,18 @@ struct GeometryBridge {
                    let last = rawg.lastGroupIndex {
                     rawg.groups[last].textureCoordinates.append(CGPoint(x: CGFloat(u), y: CGFloat(v)))
                 }
+            case "vn":
+                // "vn x y z"
+                if components.count == 4,
+                   let x = Float(components[1]),
+                   let y = Float(components[2]),
+                   let z = Float(components[3]),
+                   let last = rawg.lastGroupIndex {
+                    rawg.groups[last].normals.append(SCNVector3(x, y, z))
+                }
+            // TODO:
+            // case "vc":
+                // "vc r g b"
             case "f":
                 if components.count == 4,
                    let last = rawg.lastGroupIndex,
@@ -57,7 +69,7 @@ struct GeometryBridge {
         }
         
         // for group in rawg.groups {
-        //     print("g \(group.name)\n \(group.vertices)\n \(group.textureCoordinates)\n \(group.faces)\n\n")
+        //     print("g \(group.name)\n \(group.vertices)\n \(group.textureCoordinates)\n \(group.normals)\n \(group.faces)\n\n")
         // }
         
         return rawg
@@ -65,10 +77,10 @@ struct GeometryBridge {
     
     private func parseObjFace(components: [String]) -> RawGeometry.Face? {
         // Possible formats:
-        //      f v v v                     , 1x3 component
-        //      f v/vt v/vt v/vt            , 2x3 component
-        //      f v//vn v//vn v//vn         , 3x3 component
-        //      f v/vt/vn v/vt/vn v/vt/vn   , 3x3 component
+        //      f v v v                     , 1x3 components
+        //      f v/vt v/vt v/vt            , 2x3 components
+        //      f v//vn v//vn v//vn         , 3x3 components
+        //      f v/vt/vn v/vt/vn v/vt/vn   , 3x3 components
         
         var face = RawGeometry.Face()
         
@@ -88,27 +100,82 @@ struct GeometryBridge {
            let v1 = UInt32(indices1[0]),
            let v2 = UInt32(indices2[0]),
            let v3 = UInt32(indices3[0]) {
-            face.vS.append(contentsOf: [v1, v2, v3])
+            face.vS.append(contentsOf: [v1 - 1, v2 - 1, v3 - 1]) // convert 1-based to 0-based
         }
         
         if indices1.count > 1,
            let vt1 = UInt32(indices1[1]),
            let vt2 = UInt32(indices2[1]),
            let vt3 = UInt32(indices3[1]) {
-            face.vtS.append(contentsOf: [vt1, vt2, vt3])
+            face.vtS.append(contentsOf: [vt1 - 1, vt2 - 1, vt3 - 1]) // convert 1-based to 0-based
         }
         
-        if indices1.count > 2,
-           let vn1 = UInt32(indices1[2]),
-           let vn2 = UInt32(indices2[2]),
-           let vn3 = UInt32(indices3[2]) {
-            face.vnS.append(contentsOf: [vn1, vn2, vn3])
-        }
+         if indices1.count > 2,
+            let vn1 = UInt32(indices1[2]),
+            let vn2 = UInt32(indices2[2]),
+            let vn3 = UInt32(indices3[2]) {
+             face.vnS.append(contentsOf: [vn1 - 1, vn2 - 1, vn3 - 1]) // convert 1-based to 0-based
+         }
 
         return face
     }
     
     func toSceneGeometry(rawg: RawGeometry) -> SCNGeometry {
-        return .init()
+        // Vertices
+        var allVertices: [SCNVector3] = []
+        for group in rawg.groups {
+            allVertices.append(contentsOf: group.vertices)
+        }
+        let positionSource = SCNGeometrySource(vertices: allVertices)
+        
+        // Texture Coordinates
+        var allTextureCoordinates: [CGPoint] = []
+        for group in rawg.groups {
+            allTextureCoordinates.append(contentsOf: group.textureCoordinates)
+        }
+        let textureSource = SCNGeometrySource(textureCoordinates: allTextureCoordinates)
+        
+        // Normals
+        var allNormals: [SCNVector3] = []
+        for group in rawg.groups {
+            allNormals.append(contentsOf: group.normals)
+        }
+        let normalsSource = SCNGeometrySource(normals: allNormals)
+        
+        // Vertex Colors // TODO: Get colors from obj
+        var colors: [SCNVector3] = []
+        for group in rawg.groups {
+            let r = Float.random(in: 0...1)
+            let g = Float.random(in: 0...1)
+            let b = Float.random(in: 0...1)
+            
+            colors.append(contentsOf: group.vertices.map { _ in
+                return SCNVector3(r, g, b)
+            })
+        }
+        let colorSource = SCNGeometrySource(
+            data: NSData(bytes: colors, length: MemoryLayout<SCNVector3>.size * colors.count) as Data,
+            semantic: .color,
+            vectorCount: colors.count,
+            usesFloatComponents: true,
+            componentsPerVector: 3,
+            bytesPerComponent: MemoryLayout<Float>.size,
+            dataOffset: 0,
+            dataStride: MemoryLayout<SCNVector3>.size
+        )
+        
+        // Elements for each group
+        var elements: [SCNGeometryElement] = []
+        for group in rawg.groups {
+            let indices: [UInt32] = group.faces.flatMap { $0.vS }
+            let element = SCNGeometryElement(indices: indices, primitiveType: .triangles)
+            elements.append(element)
+        }
+        
+        // Build Geometry
+        let sources = [positionSource, textureSource, normalsSource, colorSource].filter { !$0.data.isEmpty }
+        let scng = SCNGeometry(sources: sources, elements: elements)
+        
+        return scng
     }
 }

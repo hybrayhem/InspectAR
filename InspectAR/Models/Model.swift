@@ -24,7 +24,13 @@ struct Model {
     // obj
     private var _nodeCache: SCNNode? = nil
     var modelNode: SCNNode? {
-        if _nodeCache == nil, let objURL {          
+        if _nodeCache == nil, let objURL {
+            if let objString = try? String(contentsOf: objURL, encoding: .utf8) {
+                let rawGeometry = GeometryBridge().fromObj(objString)
+                let scnGeometry = GeometryBridge().toSceneGeometry(rawg: rawGeometry)
+                return SCNNode(geometry: scnGeometry)
+            }
+            
             let scene = try? SCNScene(url: objURL)
             return scene?.rootNode.childNodes.first
         }
