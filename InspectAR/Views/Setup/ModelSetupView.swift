@@ -17,6 +17,7 @@ enum AlignmentMethod: String, CaseIterable {
 
 // TODO: Refactor model upload
 struct ModelSetupView: View {
+    // MARK: - States
     @State internal var selectedFile: URL?
     @State private var isShowingFilePicker = false
     //
@@ -30,8 +31,12 @@ struct ModelSetupView: View {
     //
     @State private var model: Model?
     @State private var isModelColored = false
+    @State private var navigateToNext = false
+    
+    // MARK: - Properties
     let modelStore = ModelStore()
     
+    // MARK: - Methods
     init(model: Model? = nil) {
         self._model = State(initialValue: model)
         if let model {
@@ -47,56 +52,63 @@ struct ModelSetupView: View {
     private var uploadButtonColor: Color {
         isUploadDisabled ? .gray : (isUploadComplete ? .blue : .green)
     }
+
+    // MARK: - Views
+    // file name
+    private var fileNameSection: some View {
+        HStack {
+            if selectedFile != nil {
+                Image(systemName: "cube")
+                    .imageScale(.medium)
+            }
+            Text(selectedFile?.lastPathComponent ?? "Select a STEP file")
+        }
+        .padding(.leading, 40)
+    }
     
+    // file button
+    private var filePickerButton: some View {
+        Button {
+            if selectedFile == nil {
+                isShowingFilePicker = true
+            } else {
+                selectedFile = nil
+                isUploadComplete = false
+            }
+        } label: {
+            if selectedFile == nil {
+                Image(systemName: "arrow.up.doc.fill")
+                    .imageScale(.large)
+                    .padding(12)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .clipShape(Circle())
+            } else {
+                Image(systemName: "x.circle")
+                    .imageScale(.large)
+                    .padding(12)
+            }
+        }
+        .padding(.vertical)
+        .padding(.trailing, 32)
+        // file importer
+        .fileImporter(
+            isPresented: $isShowingFilePicker,
+            allowedContentTypes: [.stepExtensionType, .stpExtensionType], // .stepImportType, .item
+            allowsMultipleSelection: false,
+            onCompletion: handlePickedFile
+        )
+    }
+
     var body: some View {
         VStack(spacing: 20) {
             Spacer()
             
             // File Picker
             HStack {
-                // file name
-                HStack {
-                    if selectedFile != nil {
-                        Image(systemName: "cube")
-                            .imageScale(.medium)
-                    }
-                    Text(selectedFile?.lastPathComponent ?? "Select a STEP file")
-                }
-                .padding(.leading, 40)
-                
+                fileNameSection
                 Spacer()
-                
-                // file button
-                Button {
-                    if selectedFile == nil {
-                        isShowingFilePicker = true
-                    } else {
-                        selectedFile = nil
-                        isUploadComplete = false
-                    }
-                } label: {
-                    if selectedFile == nil {
-                        Image(systemName: "arrow.up.doc.fill")
-                            .imageScale(.large)
-                            .padding(12)
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .clipShape(Circle())
-                    } else {
-                        Image(systemName: "x.circle")
-                            .imageScale(.large)
-                            .padding(12)
-                    }
-                }
-                .padding(.vertical)
-                .padding(.trailing, 32)
-                // file importer
-                .fileImporter(
-                    isPresented: $isShowingFilePicker,
-                    allowedContentTypes: [.stepExtensionType, .stpExtensionType], // .stepImportType, .item
-                    allowsMultipleSelection: false,
-                    onCompletion: handlePickedFile
-                )
+                filePickerButton
             }
             // file background
             .background(Color.gray.opacity(0.1))
@@ -156,14 +168,11 @@ struct ModelSetupView: View {
                             if let node = model?.scnNode?.normalized() {
                                 sceneState.model = node
                             }
-                            // Animation
-                            sceneState.isAnimating = false // FIX: Remove workaround
-                            DispatchQueue.main.async {
-                                sceneState.isAnimating = true
-                            }
+                            sceneState.isAnimating = true
+                            
                             // Snapshot
-                            DispatchQueue.main.async {
-                                sceneState.shouldTakeSnapshot = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1){
+                                sceneState.currentAction = .takeSnapshot
                             }
                         }
                 } else {
@@ -176,7 +185,7 @@ struct ModelSetupView: View {
                     HStack{
                         Button {
                             sceneState.isAnimating = true
-                            sceneState.shouldResetCameraPose = true
+                            sceneState.currentAction = .resetCamera
                         } label: {
                             Image(systemName: "house.circle.fill")
                                 .imageScale(.large)
@@ -185,16 +194,21 @@ struct ModelSetupView: View {
                         Spacer()
                         Button {
                             let node = sceneState.model
-                            
-                            if isModelColored {
-                                node.geometry = node.geometry?.clearColors()
-                            } else {
-                                if let vertexCounts = model?.vertexCounts {
-                                    node.geometry = node.geometry?.colorizeElementsRandom(vertexCounts: vertexCounts)
-                                }
+
+                            let colorOperation: (SCNGeometry?) -> SCNGeometry? = isModelColored 
+                            // clear
+                            ? { $0?.clearColors() }
+                            // colorize
+                            : { geometry in
+                                guard let counts = model?.vertexCounts else { return nil }
+                                return geometry?.colorizeElementsRandom(vertexCounts: counts)
                             }
-                            isModelColored.toggle()
-                            sceneState.shouldUpdateScene = true
+                            
+                            if let newGeometry = colorOperation(node.geometry) {
+                                node.geometry = newGeometry
+                                sceneState.model = node
+                                isModelColored.toggle()
+                            }
                         } label: {
                             Image(systemName: isModelColored ? "swatchpalette.fill" : "swatchpalette")
                                 .imageScale(.medium)
@@ -219,7 +233,9 @@ struct ModelSetupView: View {
                     .foregroundColor(.white)
                     .cornerRadius(15)
             }
+            .navigationDestination(isPresented: $navigateToNext, destination: { ModelAlignView(scnNode: model?.scnNode ?? SCNNode()) })
             .disabled(isUploadDisabled)
+
         }
         .padding()
         .navigationTitle(selectedFile?.lastPathComponent ?? "New Model")
@@ -228,6 +244,7 @@ struct ModelSetupView: View {
     
     private func handleNextButton() {
         print("Next button")
+        navigateToNext = true
     }
     
     private func handleUploadButton() {

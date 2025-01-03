@@ -12,9 +12,9 @@ struct RootView : View {
         NavigationStack {
             ModelGalleryView()
         }
-#if !targetEnvironment(simulator)
-        .rotationEffect(.degrees(180))
-#endif
+//#if !targetEnvironment(simulator)
+//        .rotationEffect(.degrees(180))
+//#endif
     }
 }
 

@@ -31,6 +31,7 @@
 		55B9C8DF2D1D10CE00491D63 /* GeometryBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9C8DE2D1D10CE00491D63 /* GeometryBridge.swift */; };
 		55B9C8E12D21A90F00491D63 /* SCNGeometry+Colorize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9C8E02D21A90F00491D63 /* SCNGeometry+Colorize.swift */; };
 		55C594042D22016B007079FE /* UIFont+TextHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C594032D22016B007079FE /* UIFont+TextHeight.swift */; };
+		55C594062D220812007079FE /* MainARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C594052D220812007079FE /* MainARView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +60,7 @@
 		55B9C8DE2D1D10CE00491D63 /* GeometryBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryBridge.swift; sourceTree = "<group>"; };
 		55B9C8E02D21A90F00491D63 /* SCNGeometry+Colorize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNGeometry+Colorize.swift"; sourceTree = "<group>"; };
 		55C594032D22016B007079FE /* UIFont+TextHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+TextHeight.swift"; sourceTree = "<group>"; };
+		55C594052D220812007079FE /* MainARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainARView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,8 +169,7 @@
 				554A12FA2CA7E5850056B383 /* Root */,
 				554A12FC2CA8154C0056B383 /* Gallery */,
 				554A12E02CA3490C0056B383 /* Setup */,
-				554A12E32CA34D720056B383 /* Align */,
-				554A12E42CA34D7A0056B383 /* Inspect */,
+				55C594072D22084C007079FE /* AR */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -206,6 +207,16 @@
 				55B9C8DC2D1C8B0E00491D63 /* RawGeometry.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		55C594072D22084C007079FE /* AR */ = {
+			isa = PBXGroup;
+			children = (
+				55C594052D220812007079FE /* MainARView.swift */,
+				554A12E32CA34D720056B383 /* Align */,
+				554A12E42CA34D7A0056B383 /* Inspect */,
+			);
+			path = AR;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -300,6 +311,7 @@
 				554A12C12CA0777A0056B383 /* InspectionView.swift in Sources */,
 				554A13002CA829220056B383 /* ModelSetupView+Network.swift in Sources */,
 				55B9C8E12D21A90F00491D63 /* SCNGeometry+Colorize.swift in Sources */,
+				55C594062D220812007079FE /* MainARView.swift in Sources */,
 				554A12E22CA349230056B383 /* ModelSetupView+File.swift in Sources */,
 				554A12B12CA055FF0056B383 /* AppDelegate.swift in Sources */,
 				554A12EE2CA4896D0056B383 /* Constants.swift in Sources */,

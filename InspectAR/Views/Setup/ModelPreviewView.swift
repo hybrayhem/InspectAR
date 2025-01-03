@@ -8,21 +8,23 @@
 import SwiftUI
 import SceneKit
 
+enum SceneAction {
+    case none
+    case resetCamera
+    case takeSnapshot
+}
+
 class SceneState: ObservableObject {
     @Published var name: String?
     @Published var model: SCNNode
-    @Published var shouldUpdateScene: Bool
     @Published var isAnimating: Bool
-    @Published var shouldResetCameraPose: Bool
-    @Published var shouldTakeSnapshot: Bool
+    @Published var currentAction: SceneAction
     
     init(name: String? = nil, model: SCNNode) {
         self.name = name
         self.model = model
-        shouldUpdateScene = false
         isAnimating = true
-        shouldResetCameraPose = false
-        shouldTakeSnapshot = false
+        currentAction = .none
     }
     
     convenience init() {
@@ -53,14 +55,30 @@ struct ModelPreviewView: UIViewRepresentable {
     
     func updateUIView(_ uiView: SCNView, context: Context) {
         updateModel(uiView)
-        updateCamera(uiView)
         updateAnimation(uiView)
-        updateSnapshot(uiView)
         
-        DispatchQueue.main.async {
-            sceneState.shouldUpdateScene = false
+        switch sceneState.currentAction {
+        case .resetCamera:
+            updateCamera(uiView)
+        case .takeSnapshot:
+            updateSnapshot(uiView)
+        case .none:
+            break
         }
+        
+        if sceneState.currentAction != .none { // Prevent state update loop
+            sceneState.currentAction = .none
+        }
+        
+        print("Update UI View: \(Date.now.ISO8601Format(.init(includingFractionalSeconds: true)))")
     }
+    
+    // static func dismantleUIView(_ uiView: SCNView, coordinator: Coordinator) {
+    //     uiView.scene = nil
+    //     uiView.gestureRecognizers?.removeAll()
+    //     uiView.scene?.rootNode.removeAllAnimations()
+    //     uiView.delegate = nil
+    // }
     
     // MARK: - Setup
     private func setupModel(_ scnView: SCNView) {
@@ -91,7 +109,7 @@ struct ModelPreviewView: UIViewRepresentable {
     
     // MARK: - Update
     private func updateModel(_ scnView: SCNView) {
-        if let currentModel = scnView.scene?.rootNode.childNode(withName: "model", recursively: false) {
+        if let currentModel = scnView.scene?.rootNode.childNode(withName: "model", recursively: false) { // , sceneState.model != currentModel {
             currentModel.geometry = sceneState.model.geometry
             currentModel.scale = sceneState.model.scale
             currentModel.pivot = sceneState.model.pivot
@@ -102,8 +120,7 @@ struct ModelPreviewView: UIViewRepresentable {
     }
     
     private func updateCamera(_ scnView: SCNView) {
-        if sceneState.shouldResetCameraPose,
-           let currentCameraNode = scnView.scene?.rootNode.childNode(withName: "camera", recursively: false) {
+        if let currentCameraNode = scnView.scene?.rootNode.childNode(withName: "camera", recursively: false) {
             SCNTransaction.begin()
             SCNTransaction.animationDuration = 0.5
             
@@ -112,11 +129,6 @@ struct ModelPreviewView: UIViewRepresentable {
             scnView.pointOfView = currentCameraNode
             
             SCNTransaction.commit()
-            
-            // Task {
-            DispatchQueue.main.async {
-                sceneState.shouldResetCameraPose = false
-            }
         }
     }
     
@@ -129,14 +141,8 @@ struct ModelPreviewView: UIViewRepresentable {
     }
     
     private func updateSnapshot(_ scnView: SCNView) {
-        if sceneState.shouldTakeSnapshot {
-            if let name = sceneState.name {
-                try? modelStore.save(name: name, png: scnView.snapshot().pngData())
-            }
-            
-            DispatchQueue.main.async {
-                sceneState.shouldTakeSnapshot = false
-            }
+        if let name = sceneState.name {
+            try? modelStore.save(name: name, png: scnView.snapshot().pngData())
         }
     }
     
@@ -172,7 +178,9 @@ extension ModelPreviewView {
         
         @objc func handleAnyGesture(_ gesture: UIPanGestureRecognizer) {
             if gesture.state == .began || gesture.state == .changed {
-                parent.sceneState.isAnimating = false
+                if parent.sceneState.isAnimating {
+                    parent.sceneState.isAnimating = false
+                }
             }
         }
     }
@@ -193,14 +201,14 @@ private struct PreviewContainer: View {
                     sceneState.isAnimating.toggle()
                 }
                 Button("Reset Camera") {
-                    sceneState.shouldResetCameraPose = true
+                    sceneState.currentAction = .resetCamera
                 }
                 Button("Change Model") {
                     let pyramid = SCNPyramid(width: 1, height: 1, length: 1)
                     sceneState.model = SCNNode(geometry: pyramid)
                 }
                 Button("Snapshot") {
-                    sceneState.shouldTakeSnapshot = true
+                    sceneState.currentAction = .takeSnapshot
                 }
             }
         }
