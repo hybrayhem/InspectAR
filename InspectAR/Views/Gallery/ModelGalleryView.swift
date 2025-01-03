@@ -111,12 +111,12 @@ struct ModelItemView: View {
     let lineSpacing: CGFloat = 2
     
     var body: some View {
-        return VStack(spacing: 8) {
+        return VStack(spacing: 6) {
             Image(uiImage: model.image ?? UIImage(systemName: "cube.transparent.fill")!)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
+                .cornerRadius(4)
                 .frame(maxWidth: .infinity)
-                .cornerRadius(10)
                 .foregroundColor(.gray)
             Text(model.name)
                 .font(.caption)
@@ -125,7 +125,8 @@ struct ModelItemView: View {
                 .lineSpacing(lineSpacing)
                 .frame(height: UIFont.textHeight(font: .caption1, lineCount: 2, lineSpacing: lineSpacing))
         }
-        .padding(12)
+        .padding([.top, .horizontal], 12)
+        .padding([.bottom], 4)
         .background(Color.gray.opacity(0.2))
         .aspectRatio(1, contentMode: .fit)
         .cornerRadius(12)
