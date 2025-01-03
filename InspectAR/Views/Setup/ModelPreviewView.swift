@@ -16,13 +16,13 @@ enum SceneAction {
 
 class SceneState: ObservableObject {
     @Published var name: String?
-    @Published var model: SCNNode
+    @Published var scnNode: SCNNode
     @Published var isAnimating: Bool
     @Published var currentAction: SceneAction
     
     init(name: String? = nil, model: SCNNode) {
         self.name = name
-        self.model = model
+        self.scnNode = model
         isAnimating = true
         currentAction = .none
     }
@@ -82,7 +82,7 @@ struct ModelPreviewView: UIViewRepresentable {
     
     // MARK: - Setup
     private func setupModel(_ scnView: SCNView) {
-        let model = sceneState.model
+        let model = sceneState.scnNode
         
         model.name = "model"
         scnView.scene?.rootNode.addChildNode(model)
@@ -110,12 +110,12 @@ struct ModelPreviewView: UIViewRepresentable {
     // MARK: - Update
     private func updateModel(_ scnView: SCNView) {
         if let currentModel = scnView.scene?.rootNode.childNode(withName: "model", recursively: false) { // , sceneState.model != currentModel {
-            currentModel.geometry = sceneState.model.geometry
-            currentModel.scale = sceneState.model.scale
-            currentModel.pivot = sceneState.model.pivot
+            currentModel.geometry = sceneState.scnNode.geometry
+            currentModel.scale = sceneState.scnNode.scale
+            currentModel.pivot = sceneState.scnNode.pivot
             
-            // currentModel.orientation = sceneState.model.orientation
-            currentModel.position = sceneState.model.position
+            // currentModel.orientation = sceneState.scnNode.orientation
+            currentModel.position = sceneState.scnNode.position
         }
     }
     
@@ -152,7 +152,7 @@ struct ModelPreviewView: UIViewRepresentable {
         cameraNode.position = SCNVector3(d, d, d)
         cameraNode.look(at: SCNVector3(0, 0, 0))
         
-        // cameraNode.simdPosition = sceneState.model.simdWorldFront * -5
+        // cameraNode.simdPosition = sceneState.scnNode.simdWorldFront * -5
     }
     
 }
@@ -205,7 +205,7 @@ private struct PreviewContainer: View {
                 }
                 Button("Change Model") {
                     let pyramid = SCNPyramid(width: 1, height: 1, length: 1)
-                    sceneState.model = SCNNode(geometry: pyramid)
+                    sceneState.scnNode = SCNNode(geometry: pyramid)
                 }
                 Button("Snapshot") {
                     sceneState.currentAction = .takeSnapshot
@@ -221,12 +221,12 @@ private struct PreviewContainer: View {
         let fileName = "Caster.step"
 //        let fileName = "ANC101.step"
 //        let fileName = "engine.stp"
-        guard let newModel = modelStore.load(name: fileName)?.scnNode else {
+        guard let newNode = modelStore.load(name: fileName)?.scnNode else {
             print("Couldn't load obj.")
             return
         }
         sceneState.name = fileName
-        sceneState.model = newModel.normalized()
+        sceneState.scnNode = newNode.normalized()
     }
 }
 

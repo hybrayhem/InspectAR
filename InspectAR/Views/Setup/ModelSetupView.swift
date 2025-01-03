@@ -166,7 +166,7 @@ struct ModelSetupView: View {
                             // Model
                             sceneState.name = model?.name
                             if let node = model?.scnNode?.normalized() {
-                                sceneState.model = node
+                                sceneState.scnNode = node
                             }
                             sceneState.isAnimating = true
                             
@@ -193,7 +193,7 @@ struct ModelSetupView: View {
                         }
                         Spacer()
                         Button {
-                            let node = sceneState.model
+                            let node = sceneState.scnNode
 
                             let colorOperation: (SCNGeometry?) -> SCNGeometry? = isModelColored 
                             // clear
@@ -206,7 +206,7 @@ struct ModelSetupView: View {
                             
                             if let newGeometry = colorOperation(node.geometry) {
                                 node.geometry = newGeometry
-                                sceneState.model = node
+                                sceneState.scnNode = node
                                 isModelColored.toggle()
                             }
                         } label: {
