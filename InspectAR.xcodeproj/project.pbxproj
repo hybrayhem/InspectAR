@@ -13,8 +13,8 @@
 		554A12B52CA056000056B383 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 554A12B42CA056000056B383 /* Assets.xcassets */; };
 		554A12B82CA056000056B383 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 554A12B72CA056000056B383 /* Preview Assets.xcassets */; };
 		554A12BF2CA0775F0056B383 /* ModelSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12BE2CA0775F0056B383 /* ModelSetupView.swift */; };
-		554A12C12CA0777A0056B383 /* InspectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12C02CA0777A0056B383 /* InspectionView.swift */; };
-		554A12DF2CA2C2730056B383 /* ModelAlignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12DE2CA2C2730056B383 /* ModelAlignView.swift */; };
+		554A12C12CA0777A0056B383 /* InspectionOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12C02CA0777A0056B383 /* InspectionOverlay.swift */; };
+		554A12DF2CA2C2730056B383 /* ModelAlignOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12DE2CA2C2730056B383 /* ModelAlignOverlay.swift */; };
 		554A12E22CA349230056B383 /* ModelSetupView+File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12E12CA349230056B383 /* ModelSetupView+File.swift */; };
 		554A12E62CA34E370056B383 /* ModelPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A12E52CA34E370056B383 /* ModelPreviewView.swift */; };
 		554A12EC2CA433320056B383 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 554A12EB2CA433320056B383 /* Alamofire */; };
@@ -26,6 +26,8 @@
 		554A13022CA82F100056B383 /* ModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A13012CA82F100056B383 /* ModelStore.swift */; };
 		554A13042CA9D1900056B383 /* SCNNode+Normalized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A13032CA9D1900056B383 /* SCNNode+Normalized.swift */; };
 		554A13062CA9D4220056B383 /* SCNCamera+ZoomToFit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A13052CA9D4220056B383 /* SCNCamera+ZoomToFit.swift */; };
+		555A00EE2D2A910600960C9A /* ARContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 555A00ED2D2A910600960C9A /* ARContainer.swift */; };
+		5563C9F22D2A80D5006E18C0 /* InspectARUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5563C9F12D2A80D5006E18C0 /* InspectARUITests.swift */; };
 		55B9C8DB2D1C8AD100491D63 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9C8DA2D1C8AD100491D63 /* Model.swift */; };
 		55B9C8DD2D1C8B0E00491D63 /* RawGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9C8DC2D1C8B0E00491D63 /* RawGeometry.swift */; };
 		55B9C8DF2D1D10CE00491D63 /* GeometryBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9C8DE2D1D10CE00491D63 /* GeometryBridge.swift */; };
@@ -33,6 +35,16 @@
 		55C594042D22016B007079FE /* UIFont+TextHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C594032D22016B007079FE /* UIFont+TextHeight.swift */; };
 		55C594062D220812007079FE /* MainARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C594052D220812007079FE /* MainARView.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5563C9F52D2A80D5006E18C0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 554A12A52CA055FF0056B383 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 554A12AC2CA055FF0056B383;
+			remoteInfo = InspectAR;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		551066902D0DC2E10093DEBA /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
@@ -42,8 +54,8 @@
 		554A12B42CA056000056B383 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		554A12B72CA056000056B383 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		554A12BE2CA0775F0056B383 /* ModelSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelSetupView.swift; sourceTree = "<group>"; };
-		554A12C02CA0777A0056B383 /* InspectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectionView.swift; sourceTree = "<group>"; };
-		554A12DE2CA2C2730056B383 /* ModelAlignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAlignView.swift; sourceTree = "<group>"; };
+		554A12C02CA0777A0056B383 /* InspectionOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectionOverlay.swift; sourceTree = "<group>"; };
+		554A12DE2CA2C2730056B383 /* ModelAlignOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAlignOverlay.swift; sourceTree = "<group>"; };
 		554A12E12CA349230056B383 /* ModelSetupView+File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelSetupView+File.swift"; sourceTree = "<group>"; };
 		554A12E52CA34E370056B383 /* ModelPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelPreviewView.swift; sourceTree = "<group>"; };
 		554A12E82CA36EB80056B383 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = InspectAR/Info.plist; sourceTree = "<group>"; };
@@ -55,6 +67,9 @@
 		554A13012CA82F100056B383 /* ModelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelStore.swift; sourceTree = "<group>"; };
 		554A13032CA9D1900056B383 /* SCNNode+Normalized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNNode+Normalized.swift"; sourceTree = "<group>"; };
 		554A13052CA9D4220056B383 /* SCNCamera+ZoomToFit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNCamera+ZoomToFit.swift"; sourceTree = "<group>"; };
+		555A00ED2D2A910600960C9A /* ARContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARContainer.swift; sourceTree = "<group>"; };
+		5563C9EF2D2A80D5006E18C0 /* InspectARUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InspectARUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5563C9F12D2A80D5006E18C0 /* InspectARUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectARUITests.swift; sourceTree = "<group>"; };
 		55B9C8DA2D1C8AD100491D63 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		55B9C8DC2D1C8B0E00491D63 /* RawGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawGeometry.swift; sourceTree = "<group>"; };
 		55B9C8DE2D1D10CE00491D63 /* GeometryBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryBridge.swift; sourceTree = "<group>"; };
@@ -69,6 +84,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				554A12EC2CA433320056B383 /* Alamofire in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5563C9EC2D2A80D5006E18C0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,6 +114,7 @@
 				554A12F12CA493380056B383 /* .gitignore */,
 				554A12E82CA36EB80056B383 /* Info.plist */,
 				554A12AF2CA055FF0056B383 /* InspectAR */,
+				5563C9F02D2A80D5006E18C0 /* InspectARUITests */,
 				554A12AE2CA055FF0056B383 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -100,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				554A12AD2CA055FF0056B383 /* InspectAR.app */,
+				5563C9EF2D2A80D5006E18C0 /* InspectARUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -139,7 +163,7 @@
 		554A12E32CA34D720056B383 /* Align */ = {
 			isa = PBXGroup;
 			children = (
-				554A12DE2CA2C2730056B383 /* ModelAlignView.swift */,
+				554A12DE2CA2C2730056B383 /* ModelAlignOverlay.swift */,
 			);
 			path = Align;
 			sourceTree = "<group>";
@@ -147,7 +171,7 @@
 		554A12E42CA34D7A0056B383 /* Inspect */ = {
 			isa = PBXGroup;
 			children = (
-				554A12C02CA0777A0056B383 /* InspectionView.swift */,
+				554A12C02CA0777A0056B383 /* InspectionOverlay.swift */,
 			);
 			path = Inspect;
 			sourceTree = "<group>";
@@ -200,6 +224,23 @@
 			path = Gallery;
 			sourceTree = "<group>";
 		};
+		555A00EC2D2A90FF00960C9A /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				55C594052D220812007079FE /* MainARView.swift */,
+				555A00ED2D2A910600960C9A /* ARContainer.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		5563C9F02D2A80D5006E18C0 /* InspectARUITests */ = {
+			isa = PBXGroup;
+			children = (
+				5563C9F12D2A80D5006E18C0 /* InspectARUITests.swift */,
+			);
+			path = InspectARUITests;
+			sourceTree = "<group>";
+		};
 		55B9C8D92D1C8AC000491D63 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -212,7 +253,7 @@
 		55C594072D22084C007079FE /* AR */ = {
 			isa = PBXGroup;
 			children = (
-				55C594052D220812007079FE /* MainARView.swift */,
+				555A00EC2D2A90FF00960C9A /* Main */,
 				554A12E32CA34D720056B383 /* Align */,
 				554A12E42CA34D7A0056B383 /* Inspect */,
 			);
@@ -242,6 +283,24 @@
 			productReference = 554A12AD2CA055FF0056B383 /* InspectAR.app */;
 			productType = "com.apple.product-type.application";
 		};
+		5563C9EE2D2A80D5006E18C0 /* InspectARUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5563C9F92D2A80D5006E18C0 /* Build configuration list for PBXNativeTarget "InspectARUITests" */;
+			buildPhases = (
+				5563C9EB2D2A80D5006E18C0 /* Sources */,
+				5563C9EC2D2A80D5006E18C0 /* Frameworks */,
+				5563C9ED2D2A80D5006E18C0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5563C9F62D2A80D5006E18C0 /* PBXTargetDependency */,
+			);
+			name = InspectARUITests;
+			productName = InspectARUITests;
+			productReference = 5563C9EF2D2A80D5006E18C0 /* InspectARUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -254,6 +313,10 @@
 				TargetAttributes = {
 					554A12AC2CA055FF0056B383 = {
 						CreatedOnToolsVersion = 15.2;
+					};
+					5563C9EE2D2A80D5006E18C0 = {
+						CreatedOnToolsVersion = 15.2;
+						TestTargetID = 554A12AC2CA055FF0056B383;
 					};
 				};
 			};
@@ -274,6 +337,7 @@
 			projectRoot = "";
 			targets = (
 				554A12AC2CA055FF0056B383 /* InspectAR */,
+				5563C9EE2D2A80D5006E18C0 /* InspectARUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -290,6 +354,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5563C9ED2D2A80D5006E18C0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -303,15 +374,16 @@
 				55B9C8DF2D1D10CE00491D63 /* GeometryBridge.swift in Sources */,
 				554A13042CA9D1900056B383 /* SCNNode+Normalized.swift in Sources */,
 				554A13022CA82F100056B383 /* ModelStore.swift in Sources */,
-				554A12DF2CA2C2730056B383 /* ModelAlignView.swift in Sources */,
+				554A12DF2CA2C2730056B383 /* ModelAlignOverlay.swift in Sources */,
 				554A12B32CA055FF0056B383 /* RootView.swift in Sources */,
 				554A12E62CA34E370056B383 /* ModelPreviewView.swift in Sources */,
 				551066912D0DC2E10093DEBA /* APIManager.swift in Sources */,
 				554A13062CA9D4220056B383 /* SCNCamera+ZoomToFit.swift in Sources */,
-				554A12C12CA0777A0056B383 /* InspectionView.swift in Sources */,
+				554A12C12CA0777A0056B383 /* InspectionOverlay.swift in Sources */,
 				554A13002CA829220056B383 /* ModelSetupView+Network.swift in Sources */,
 				55B9C8E12D21A90F00491D63 /* SCNGeometry+Colorize.swift in Sources */,
 				55C594062D220812007079FE /* MainARView.swift in Sources */,
+				555A00EE2D2A910600960C9A /* ARContainer.swift in Sources */,
 				554A12E22CA349230056B383 /* ModelSetupView+File.swift in Sources */,
 				554A12B12CA055FF0056B383 /* AppDelegate.swift in Sources */,
 				554A12EE2CA4896D0056B383 /* Constants.swift in Sources */,
@@ -320,7 +392,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5563C9EB2D2A80D5006E18C0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5563C9F22D2A80D5006E18C0 /* InspectARUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5563C9F62D2A80D5006E18C0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 554A12AC2CA055FF0056B383 /* InspectAR */;
+			targetProxy = 5563C9F52D2A80D5006E18C0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		554A12B92CA056000056B383 /* Debug */ = {
@@ -454,7 +542,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = InspectAR/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Camera required for the AR inspection features.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arkit;
@@ -487,7 +575,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = InspectAR/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Camera required for the AR inspection features.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arkit;
@@ -508,6 +596,40 @@
 			};
 			name = Release;
 		};
+		5563C9F72D2A80D5006E18C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B8YH45U55M;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hybrayhem.InspectARUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = InspectAR;
+			};
+			name = Debug;
+		};
+		5563C9F82D2A80D5006E18C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B8YH45U55M;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hybrayhem.InspectARUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = InspectAR;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -525,6 +647,15 @@
 			buildConfigurations = (
 				554A12BC2CA056000056B383 /* Debug */,
 				554A12BD2CA056000056B383 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5563C9F92D2A80D5006E18C0 /* Build configuration list for PBXNativeTarget "InspectARUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5563C9F72D2A80D5006E18C0 /* Debug */,
+				5563C9F82D2A80D5006E18C0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
