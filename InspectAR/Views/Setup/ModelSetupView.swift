@@ -233,7 +233,11 @@ struct ModelSetupView: View {
                     .foregroundColor(.white)
                     .cornerRadius(15)
             }
-            .navigationDestination(isPresented: $navigateToNext, destination: { ModelAlignView(scnNode: model?.scnNode ?? SCNNode()) })
+            .navigationDestination(isPresented: $navigateToNext,
+                                   destination: {
+                MainARView(scnNode: model?.scnNode ?? SCNNode())
+//                ARPlacementView(objectToPlace: model?.scnNode ?? SCNNode())
+            })
             .disabled(isUploadDisabled)
 
         }
