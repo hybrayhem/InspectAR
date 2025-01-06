@@ -27,6 +27,8 @@
 		554A13042CA9D1900056B383 /* SCNNode+Normalized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A13032CA9D1900056B383 /* SCNNode+Normalized.swift */; };
 		554A13062CA9D4220056B383 /* SCNCamera+ZoomToFit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A13052CA9D4220056B383 /* SCNCamera+ZoomToFit.swift */; };
 		555A00EE2D2A910600960C9A /* ARContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 555A00ED2D2A910600960C9A /* ARContainer.swift */; };
+		555A00F02D2C6CD600960C9A /* ARContainer+Gestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 555A00EF2D2C6CD600960C9A /* ARContainer+Gestures.swift */; };
+		555A00F32D2C734600960C9A /* SCNGeometry+Frame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 555A00F22D2C734600960C9A /* SCNGeometry+Frame.swift */; };
 		5563C9F22D2A80D5006E18C0 /* InspectARUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5563C9F12D2A80D5006E18C0 /* InspectARUITests.swift */; };
 		55B9C8DB2D1C8AD100491D63 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9C8DA2D1C8AD100491D63 /* Model.swift */; };
 		55B9C8DD2D1C8B0E00491D63 /* RawGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9C8DC2D1C8B0E00491D63 /* RawGeometry.swift */; };
@@ -68,6 +70,8 @@
 		554A13032CA9D1900056B383 /* SCNNode+Normalized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNNode+Normalized.swift"; sourceTree = "<group>"; };
 		554A13052CA9D4220056B383 /* SCNCamera+ZoomToFit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNCamera+ZoomToFit.swift"; sourceTree = "<group>"; };
 		555A00ED2D2A910600960C9A /* ARContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARContainer.swift; sourceTree = "<group>"; };
+		555A00EF2D2C6CD600960C9A /* ARContainer+Gestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARContainer+Gestures.swift"; sourceTree = "<group>"; };
+		555A00F22D2C734600960C9A /* SCNGeometry+Frame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNGeometry+Frame.swift"; sourceTree = "<group>"; };
 		5563C9EF2D2A80D5006E18C0 /* InspectARUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InspectARUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5563C9F12D2A80D5006E18C0 /* InspectARUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectARUITests.swift; sourceTree = "<group>"; };
 		55B9C8DA2D1C8AD100491D63 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -182,6 +186,7 @@
 				554A13032CA9D1900056B383 /* SCNNode+Normalized.swift */,
 				554A13052CA9D4220056B383 /* SCNCamera+ZoomToFit.swift */,
 				55B9C8E02D21A90F00491D63 /* SCNGeometry+Colorize.swift */,
+				555A00F22D2C734600960C9A /* SCNGeometry+Frame.swift */,
 				55C594032D22016B007079FE /* UIFont+TextHeight.swift */,
 			);
 			path = Helpers;
@@ -229,6 +234,7 @@
 			children = (
 				55C594052D220812007079FE /* MainARView.swift */,
 				555A00ED2D2A910600960C9A /* ARContainer.swift */,
+				555A00EF2D2C6CD600960C9A /* ARContainer+Gestures.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -376,12 +382,14 @@
 				554A13022CA82F100056B383 /* ModelStore.swift in Sources */,
 				554A12DF2CA2C2730056B383 /* ModelAlignOverlay.swift in Sources */,
 				554A12B32CA055FF0056B383 /* RootView.swift in Sources */,
+				555A00F02D2C6CD600960C9A /* ARContainer+Gestures.swift in Sources */,
 				554A12E62CA34E370056B383 /* ModelPreviewView.swift in Sources */,
 				551066912D0DC2E10093DEBA /* APIManager.swift in Sources */,
 				554A13062CA9D4220056B383 /* SCNCamera+ZoomToFit.swift in Sources */,
 				554A12C12CA0777A0056B383 /* InspectionOverlay.swift in Sources */,
 				554A13002CA829220056B383 /* ModelSetupView+Network.swift in Sources */,
 				55B9C8E12D21A90F00491D63 /* SCNGeometry+Colorize.swift in Sources */,
+				555A00F32D2C734600960C9A /* SCNGeometry+Frame.swift in Sources */,
 				55C594062D220812007079FE /* MainARView.swift in Sources */,
 				555A00EE2D2A910600960C9A /* ARContainer.swift in Sources */,
 				554A12E22CA349230056B383 /* ModelSetupView+File.swift in Sources */,

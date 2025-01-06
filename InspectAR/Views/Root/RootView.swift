@@ -10,7 +10,8 @@ import SwiftUI
 struct RootView : View {
     var body: some View {
         NavigationStack {
-            ModelGalleryView()
+//            ModelGalleryView()
+            MainARViewPreview()
         }
 //#if !targetEnvironment(simulator)
 //        .rotationEffect(.degrees(180))

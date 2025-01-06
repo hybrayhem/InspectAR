@@ -12,10 +12,16 @@ import SceneKit
 
 struct MainARView: View {
     let scnNode: SCNNode
-//    let overlayType: enum
+    // let overlayType: enum
+    let container: ARContainerRepresentable
+    
+    init(scnNode: SCNNode) {
+        self.scnNode = scnNode
+        self.container = ARContainerRepresentable(objectToPlace: scnNode)
+    }
     
     var body: some View {
-        ARContainerRepresentable()
+        container
             .ignoresSafeArea(.all)
     }
 }
