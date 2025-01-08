@@ -10,6 +10,17 @@ import ARKit
 //import SceneKit
 import RealityKit
 
+enum ARState {
+    case none
+    case searchingPlane
+
+    case placingObject
+    case objectPlaced
+    
+    case inspectingObject
+    case objectInspected
+}
+
 struct ARContainerRepresentable: UIViewControllerRepresentable {
     var objectToPlace: SCNNode?
     
@@ -37,10 +48,23 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
     internal var placeAt = SCNNode()
     internal var shadowObject: SCNNode?
     // States
-    internal var isPlacementValid = false {
+//    internal var isPlacementValid = false {
+//        didSet {
+//            shadowObject?.isHidden = !isPlacementValid
+//            sceneView?.debugOptions = !isPlacementValid ? [] : [.showBoundingBoxes]
+//        }
+//    }
+    internal var state: ARState = .none {
         didSet {
-            shadowObject?.isHidden = !isPlacementValid
-            sceneView?.debugOptions = !isPlacementValid ? [] : [.showBoundingBoxes]
+            if oldValue != state { print("State: \(state)") }
+            
+            if state == .placingObject {
+                shadowObject?.isHidden = false
+                sceneView?.debugOptions = [.showBoundingBoxes]
+            } else {
+                shadowObject?.isHidden = true
+                sceneView?.debugOptions = []
+            }
         }
     }
     
@@ -52,6 +76,7 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         setupCoaching()
         setupObjects()
         setupGestures()
+        state = .searchingPlane
     }
     
     private func setupAR() {
@@ -107,15 +132,11 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         // Create shadow object
         if let shadowObject = objectToPlace?.clone() {
             shadowObject.opacity = 0.5
-            let s = 0.001 // Remove
-            shadowObject.scale = .init(s, s, s) // Remove
             shadowObject.isHidden = true
             
             self.shadowObject = shadowObject
             sceneView.scene.rootNode.addChildNode(shadowObject)
         }
-        
-        isPlacementValid = false
     }
     
     private func setupGestures() {
@@ -133,45 +154,53 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .horizontal // .vertical, .any
         session?.run(configuration) // , options: [.resetTracking, .removeExistingAnchors])
+        // state = .searchingPlane // This method doesn't changing the state
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         session?.pause()
+        state = .none
     }
     
     // MARK: - Actions
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         guard let sceneView else { return }
         
-        // Cast the ray
-        guard let query = sceneView.raycastQuery(
-            from: view.center,
-            allowing: .estimatedPlane,
-            alignment: .horizontal
-        ),
-        let result = sceneView.session.raycast(query).first else {
-            isPlacementValid = false
-            return
+        
+        switch state {
+        case .searchingPlane, .placingObject:
+            // Cast the ray
+            guard let query = sceneView.raycastQuery(
+                from: view.center,
+                allowing: .estimatedPlane,
+                alignment: .horizontal
+            ),
+            let result = sceneView.session.raycast(query).first else {
+                state = .searchingPlane
+                return
+            }
+            state = .placingObject
+            
+            // Get results
+            let position = SCNVector3(
+                result.worldTransform.columns.3.x,
+                result.worldTransform.columns.3.y,
+                result.worldTransform.columns.3.z
+            )
+            placeAt.position = position
+            
+            // if let camera = sceneView.pointOfView {
+            //     placeAt.look(at: camera.worldPosition, up: .init(0, 1, 0), localFront: .init(0, 0, -1))
+            // }
+            
+            // Position the shadow
+            shadowObject?.position = placeAt.position
+            
+            // // Keep object parallel to camera
+            // shadowObject?.eulerAngles.y = placeAt.eulerAngles.y
+        default:
+            break
         }
-        isPlacementValid = true
-        
-        // Get results
-        let position = SCNVector3(
-            result.worldTransform.columns.3.x,
-            result.worldTransform.columns.3.y,
-            result.worldTransform.columns.3.z
-        )
-        placeAt.position = position
-
-        // if let camera = sceneView.pointOfView {
-        //     placeAt.look(at: camera.worldPosition, up: .init(0, 1, 0), localFront: .init(0, 0, -1))
-        // }
-        
-        // Position the shadow
-        shadowObject?.position = placeAt.position
-        
-        // // Keep object parallel to camera
-        // shadowObject?.eulerAngles.y = placeAt.eulerAngles.y
     }
 }

@@ -9,15 +9,16 @@ import SwiftUI
 
 extension ARContainer {
     @objc internal func handleTap(_ gesture: UITapGestureRecognizer) {
-        guard isPlacementValid,
-              let sceneView,
+        guard let sceneView,
               let objectToPlace else { return }
         
-        let object = objectToPlace.clone()
-        let s = 0.001 // Remove
-        object.scale = .init(s, s, s) // Remove
-        object.position = placeAt.position
-        
-        sceneView.scene.rootNode.addChildNode(object)
+        if state == .placingObject {
+            let object = objectToPlace.clone()
+            object.position = placeAt.position
+            // object.opacity = 0.9
+            
+            sceneView.scene.rootNode.addChildNode(object)
+            state = .objectPlaced
+        }
     }
 }

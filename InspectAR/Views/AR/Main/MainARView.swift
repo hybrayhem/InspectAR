@@ -34,7 +34,14 @@ struct MainARViewPreview: View {
     let model = ModelStore().load(name: "chassis.step")
     let box = SCNNode(geometry: SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0))
     
+    var node: SCNNode? {
+        let node = model?.scnNode
+        let s = 0.001
+        node?.scale = SCNVector3(s, s, s)
+        return node
+    }
+    
     var body: some View {
-        MainARView(scnNode: model?.scnNode ?? box)
+        MainARView(scnNode: node ?? box)
     }
 }

@@ -52,6 +52,14 @@ struct ModelSetupView: View {
     private var uploadButtonColor: Color {
         isUploadDisabled ? .gray : (isUploadComplete ? .blue : .green)
     }
+    
+    private var scaledNode: SCNNode? {
+        let node = model?.scnNode
+        let s = 0.001
+        node?.scale = SCNVector3(s, s, s)
+        // node?.eulerAngles.x = Float(Double.pi / 2)
+        return node
+    }
 
     // MARK: - Views
     // file name
@@ -235,8 +243,7 @@ struct ModelSetupView: View {
             }
             .navigationDestination(isPresented: $navigateToNext,
                                    destination: {
-                MainARView(scnNode: model?.scnNode ?? SCNNode())
-//                ARPlacementView(objectToPlace: model?.scnNode ?? SCNNode())
+                MainARView(scnNode: scaledNode ?? SCNNode())
             })
             .disabled(isUploadDisabled)
 
