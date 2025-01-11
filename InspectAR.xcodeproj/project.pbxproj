@@ -36,6 +36,7 @@
 		55B9C8E12D21A90F00491D63 /* SCNGeometry+Colorize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9C8E02D21A90F00491D63 /* SCNGeometry+Colorize.swift */; };
 		55C594042D22016B007079FE /* UIFont+TextHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C594032D22016B007079FE /* UIFont+TextHeight.swift */; };
 		55C594062D220812007079FE /* MainARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C594052D220812007079FE /* MainARView.swift */; };
+		55CBDD532D303EB2007BC925 /* ARContainer+Coaching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55CBDD522D303EB2007BC925 /* ARContainer+Coaching.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +81,7 @@
 		55B9C8E02D21A90F00491D63 /* SCNGeometry+Colorize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNGeometry+Colorize.swift"; sourceTree = "<group>"; };
 		55C594032D22016B007079FE /* UIFont+TextHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+TextHeight.swift"; sourceTree = "<group>"; };
 		55C594052D220812007079FE /* MainARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainARView.swift; sourceTree = "<group>"; };
+		55CBDD522D303EB2007BC925 /* ARContainer+Coaching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARContainer+Coaching.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -235,6 +237,7 @@
 				55C594052D220812007079FE /* MainARView.swift */,
 				555A00ED2D2A910600960C9A /* ARContainer.swift */,
 				555A00EF2D2C6CD600960C9A /* ARContainer+Gestures.swift */,
+				55CBDD522D303EB2007BC925 /* ARContainer+Coaching.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -384,6 +387,7 @@
 				554A12B32CA055FF0056B383 /* RootView.swift in Sources */,
 				555A00F02D2C6CD600960C9A /* ARContainer+Gestures.swift in Sources */,
 				554A12E62CA34E370056B383 /* ModelPreviewView.swift in Sources */,
+				55CBDD532D303EB2007BC925 /* ARContainer+Coaching.swift in Sources */,
 				551066912D0DC2E10093DEBA /* APIManager.swift in Sources */,
 				554A13062CA9D4220056B383 /* SCNCamera+ZoomToFit.swift in Sources */,
 				554A12C12CA0777A0056B383 /* InspectionOverlay.swift in Sources */,

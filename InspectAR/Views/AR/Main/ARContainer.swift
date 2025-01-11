@@ -48,12 +48,6 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
     internal var placeAt = SCNNode()
     internal var shadowObject: SCNNode?
     // States
-//    internal var isPlacementValid = false {
-//        didSet {
-//            shadowObject?.isHidden = !isPlacementValid
-//            sceneView?.debugOptions = !isPlacementValid ? [] : [.showBoundingBoxes]
-//        }
-//    }
     internal var state: ARState = .none {
         didSet {
             if oldValue != state { print("State: \(state)") }
@@ -108,6 +102,7 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         let coachingOverlay = ARCoachingOverlayView(frame: view.bounds)
         sceneView.addSubview(coachingOverlay)
         coachingOverlay.session = session
+        coachingOverlay.delegate = self
         coachingOverlay.goal = .horizontalPlane
         coachingOverlay.activatesAutomatically = true
 
