@@ -69,6 +69,7 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         
         setupAR()
         setupCoaching()
+        setupButtons()
         setupObjects()
         setupGestures()
         
@@ -118,6 +119,44 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
             coachingOverlay.leadingAnchor.constraint(equalTo: sceneView.leadingAnchor),
             coachingOverlay.trailingAnchor.constraint(equalTo: sceneView.trailingAnchor)
         ])
+    }
+    
+    private func setupButtons() {
+        guard let sceneView else { return }
+        
+        let largeSymbol = UIImage.SymbolConfiguration(scale: .large)
+
+        // Flashlight button
+        let flashlightButton = UIButton()
+        flashlightButton.setImage(UIImage(systemName: "flashlight.off.circle", withConfiguration: largeSymbol), for: .normal)
+        flashlightButton.setImage(UIImage(systemName: "flashlight.on.circle", withConfiguration: largeSymbol), for: .selected)
+        flashlightButton.layer.cornerRadius = 22
+        flashlightButton.addTarget(self, action: #selector(toggleFlashlight), for: .touchUpInside)
+        
+        sceneView.addSubview(flashlightButton)
+        flashlightButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            flashlightButton.widthAnchor.constraint(equalToConstant: 44),
+            flashlightButton.heightAnchor.constraint(equalToConstant: 44),
+            flashlightButton.bottomAnchor.constraint(equalTo: sceneView.bottomAnchor, constant: -16),
+            flashlightButton.trailingAnchor.constraint(equalTo: sceneView.trailingAnchor, constant: -16)
+        ])
+        
+        // Camera info button
+        let cameraInfoButton = UIButton()
+        cameraInfoButton.setImage(UIImage(systemName: "camera.badge.ellipsis.fill", withConfiguration: largeSymbol), for: .normal)
+        cameraInfoButton.layer.cornerRadius = 22
+        cameraInfoButton.addTarget(self, action: #selector(getCameraInfo), for: .touchUpInside)
+        
+        sceneView.addSubview(cameraInfoButton)
+        cameraInfoButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            cameraInfoButton.widthAnchor.constraint(equalToConstant: 44),
+            cameraInfoButton.heightAnchor.constraint(equalToConstant: 44),
+            cameraInfoButton.bottomAnchor.constraint(equalTo: sceneView.bottomAnchor, constant: -16 - 44 - 4),
+            cameraInfoButton.trailingAnchor.constraint(equalTo: sceneView.trailingAnchor, constant: -16)
+        ])
+        
     }
     
     private func setupObjects() {
@@ -219,4 +258,58 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         }
         stateLock.unlock()
     }
+    
+    @objc func toggleFlashlight(sender: UIButton) {
+        guard let device = AVCaptureDevice.default(for: AVMediaType.video), device.hasTorch else {
+            print("Device does not have a torch.")
+            return
+        }
+        
+        try? device.lockForConfiguration()
+        let isOn = device.torchMode == .on
+        device.torchMode = isOn ? .off : .on
+        device.unlockForConfiguration()
+        
+        sender.isSelected = isOn
+    }
+    
+    // TODO: Debug method, review later
+    @objc func getCameraInfo(sender: UIButton) {
+        guard let camera = sceneView?.pointOfView else { return }
+        print("worldPosition: ", camera.worldPosition)
+        
+        let avCamera = sceneView?.session.currentFrame?.camera
+        print("transform: ", avCamera?.transform.columns.3 ?? "nil")
+        print("projectionMatrix: ", avCamera?.projectionMatrix(for: .portrait, viewportSize: .init(width: 100, height: 100), zNear: 0.1, zFar: 1000) ?? "nil")
+        print("viewMatrix: ", avCamera?.viewMatrix(for: .portrait) ?? "nil")
+        print("intrinsics: ", avCamera?.intrinsics ?? "nil")
+        
+        let depthData = sceneView?.session.currentFrame?.capturedDepthData
+        print("cameraCalibrationData: ", depthData?.cameraCalibrationData ?? "nil")
+        print("depthDataQuality: ", depthData?.depthDataQuality ?? "nil")
+        
+        // captured image
+        let capturedImage = sceneView?.session.currentFrame?.capturedImage
+        print("capturedImage size: ", UIImage(ciImage: CIImage(cvPixelBuffer: capturedImage!)).size)
+        
+        var capturedImageHighRes: CVPixelBuffer?
+        sceneView?.session.captureHighResolutionFrame(completion: { frame, error in
+            capturedImageHighRes = frame?.capturedImage
+
+            let ciImage = CIImage(cvPixelBuffer: capturedImageHighRes!/*, options: [.applyOrientationProperty: true]*/).oriented(.right)
+            
+            // Show image
+            let image = UIImage(ciImage: ciImage)
+            print("capturedImageHighRes size: ", image.size)
+            let imageView = UIImageView(image: image)
+            imageView.contentMode = .scaleAspectFit
+            imageView.frame = self.view.bounds
+            self.view.addSubview(imageView)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                imageView.removeFromSuperview()
+            }
+        })
+    }
+
 }
