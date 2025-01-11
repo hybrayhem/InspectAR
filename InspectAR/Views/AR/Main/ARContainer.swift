@@ -143,6 +143,12 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         sceneView.addGestureRecognizer(tapGesture)
+        
+        let rotationGesture = UIRotationGestureRecognizer(target: self, action: #selector(handleRotation))
+        sceneView.addGestureRecognizer(rotationGesture)
+        
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        sceneView.addGestureRecognizer(panGesture)
     }
     
     // MARK: - Lifecycle
