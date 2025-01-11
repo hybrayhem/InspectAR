@@ -87,6 +87,7 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         sceneView.autoenablesDefaultLighting = true
         sceneView.automaticallyUpdatesLighting = true
         sceneView.rendersMotionBlur = true
+        sceneView.rendersCameraGrain = true
         // sceneView.showsStatistics = true
         // sceneView.debugOptions = [.showFeaturePoints, .showWorldOrigin]
         
@@ -158,6 +159,11 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         // Configure AR Session
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .horizontal // .vertical, .any
+        configuration.isAutoFocusEnabled = true
+        configuration.isLightEstimationEnabled = true
+        if let format =  ARWorldTrackingConfiguration.recommendedVideoFormatForHighResolutionFrameCapturing {
+            configuration.videoFormat = format
+        }
         session?.run(configuration) // , options: [.resetTracking, .removeExistingAnchors])
         // state = .searchingPlane // This method doesn't changing the state
     }

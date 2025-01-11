@@ -183,6 +183,10 @@ struct ModelSetupView: View {
                                 sceneState.currentAction = .takeSnapshot
                             }
                         }
+                        .onDisappear() {
+                            sceneState.isAnimating = false
+                            sceneState.scnNode = SCNNode() // clear
+                        }
                 } else {
                     Text("No file to preview.")
                         .foregroundColor(.gray)
