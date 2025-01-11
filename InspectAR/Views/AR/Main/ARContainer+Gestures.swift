@@ -12,6 +12,7 @@ extension ARContainer {
         guard let sceneView,
               let objectToPlace else { return }
         
+        stateLock.lock()
         if state == .placingObject {
             let object = objectToPlace.clone()
             object.position = placeAt.position
@@ -20,5 +21,6 @@ extension ARContainer {
             sceneView.scene.rootNode.addChildNode(object)
             state = .objectPlaced
         }
+        stateLock.unlock()
     }
 }

@@ -61,6 +61,7 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
             }
         }
     }
+    internal var stateLock = NSLock()
     
     // MARK: - Init
     override func viewDidLoad() {
@@ -70,7 +71,10 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         setupCoaching()
         setupObjects()
         setupGestures()
+        
+        stateLock.lock()
         state = .searchingPlane
+        stateLock.unlock()
     }
     
     private func setupAR() {
@@ -155,14 +159,18 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         session?.pause()
+        
+        stateLock.lock()
         state = .none
+        stateLock.unlock()
     }
     
     // MARK: - Actions
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         guard let sceneView else { return }
         
-        
+        stateLock.lock()
+        defer { stateLock.unlock() }
         switch state {
         case .searchingPlane, .placingObject:
             // Cast the ray
@@ -197,5 +205,6 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         default:
             break
         }
+        stateLock.unlock()
     }
 }
