@@ -37,6 +37,7 @@
 		55C594042D22016B007079FE /* UIFont+TextHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C594032D22016B007079FE /* UIFont+TextHeight.swift */; };
 		55C594062D220812007079FE /* MainARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C594052D220812007079FE /* MainARView.swift */; };
 		55CBDD532D303EB2007BC925 /* ARContainer+Coaching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55CBDD522D303EB2007BC925 /* ARContainer+Coaching.swift */; };
+		55CBDD552D33D81E007BC925 /* SIMD+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55CBDD542D33D81E007BC925 /* SIMD+Helpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +83,7 @@
 		55C594032D22016B007079FE /* UIFont+TextHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+TextHeight.swift"; sourceTree = "<group>"; };
 		55C594052D220812007079FE /* MainARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainARView.swift; sourceTree = "<group>"; };
 		55CBDD522D303EB2007BC925 /* ARContainer+Coaching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARContainer+Coaching.swift"; sourceTree = "<group>"; };
+		55CBDD542D33D81E007BC925 /* SIMD+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SIMD+Helpers.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,7 +143,7 @@
 				5510668F2D0DC2CF0093DEBA /* Services */,
 				55B9C8D92D1C8AC000491D63 /* Models */,
 				554A12F92CA7E4E00056B383 /* Views */,
-				554A12F32CA7366F0056B383 /* Helpers */,
+				554A12F32CA7366F0056B383 /* Utilities */,
 				554A12FB2CA7E5CE0056B383 /* Resources */,
 			);
 			path = InspectAR;
@@ -182,7 +184,7 @@
 			path = Inspect;
 			sourceTree = "<group>";
 		};
-		554A12F32CA7366F0056B383 /* Helpers */ = {
+		554A12F32CA7366F0056B383 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
 				554A13032CA9D1900056B383 /* SCNNode+Normalized.swift */,
@@ -190,8 +192,9 @@
 				55B9C8E02D21A90F00491D63 /* SCNGeometry+Colorize.swift */,
 				555A00F22D2C734600960C9A /* SCNGeometry+Frame.swift */,
 				55C594032D22016B007079FE /* UIFont+TextHeight.swift */,
+				55CBDD542D33D81E007BC925 /* SIMD+Helpers.swift */,
 			);
-			path = Helpers;
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		554A12F92CA7E4E00056B383 /* Views */ = {
@@ -378,6 +381,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55B9C8DB2D1C8AD100491D63 /* Model.swift in Sources */,
+				55CBDD552D33D81E007BC925 /* SIMD+Helpers.swift in Sources */,
 				554A12BF2CA0775F0056B383 /* ModelSetupView.swift in Sources */,
 				55B9C8DD2D1C8B0E00491D63 /* RawGeometry.swift in Sources */,
 				55B9C8DF2D1D10CE00491D63 /* GeometryBridge.swift in Sources */,
