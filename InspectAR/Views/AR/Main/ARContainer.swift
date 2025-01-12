@@ -5,9 +5,8 @@
 //  Created by hybrayhem.
 //
 
-import SwiftUI
 import ARKit
-//import SceneKit
+import SwiftUI
 import RealityKit
 
 enum ARState {
@@ -45,8 +44,10 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
     internal var session: ARSession? { sceneView?.session }
     // Objects
     var objectToPlace: SCNNode?
-    internal var placeAt = SCNNode()
     internal var shadowObject: SCNNode?
+    internal var placeAt = SCNNode()
+    internal var panOffset = SIMD3<Float>()
+    internal var initialPanPosition: SIMD3<Float>?
     // States
     internal var state: ARState = .none {
         didSet {
@@ -197,12 +198,17 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         
         // Configure AR Session
         let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = .horizontal // .vertical, .any
+        configuration.planeDetection = [.horizontal] // .vertical, .any
         configuration.isAutoFocusEnabled = true
         configuration.isLightEstimationEnabled = true
+        
         if let format =  ARWorldTrackingConfiguration.recommendedVideoFormatForHighResolutionFrameCapturing {
             configuration.videoFormat = format
         }
+        
+        configuration.frameSemantics = [.personSegmentationWithDepth]
+        // arView.environment.sceneUnderstanding.options.insert(.occlusion) // Only available in RealityKit
+        
         session?.run(configuration) // , options: [.resetTracking, .removeExistingAnchors])
         // state = .searchingPlane // This method doesn't changing the state
     }
@@ -216,7 +222,7 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         stateLock.unlock()
     }
     
-    // MARK: - Actions
+    // MARK: - Scene
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         guard let sceneView else { return }
         
@@ -259,6 +265,7 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         stateLock.unlock()
     }
     
+    // MARK: - Actions
     @objc func toggleFlashlight(sender: UIButton) {
         guard let device = AVCaptureDevice.default(for: AVMediaType.video), device.hasTorch else {
             print("Device does not have a torch.")
