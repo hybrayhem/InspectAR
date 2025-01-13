@@ -22,12 +22,14 @@ enum ARState {
 
 struct ARContainerRepresentable: UIViewControllerRepresentable {
     var objectToPlace: SCNNode?
+    var vertexCounts: [Int]?
     
     func makeUIViewController(context: Context) -> ARContainer {
         let controller = ARContainer()
         if let object = objectToPlace {
             controller.objectToPlace = object
         }
+        controller.vertexCounts = vertexCounts
         return controller
     }
     
@@ -39,11 +41,13 @@ struct ARContainerRepresentable: UIViewControllerRepresentable {
 }
 
 class ARContainer: UIViewController, ARSCNViewDelegate {
+    var counter: Int = 0
     // Views
     internal var sceneView: ARSCNView?
     internal var session: ARSession? { sceneView?.session }
     // Objects
     var objectToPlace: SCNNode?
+    var vertexCounts: [Int]?
     var initialObjectScale: SCNVector3?
     internal var shadowObject: SCNNode?
     internal var placeAt = SCNNode()
@@ -160,6 +164,21 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
             cameraInfoButton.heightAnchor.constraint(equalToConstant: 44),
             cameraInfoButton.bottomAnchor.constraint(equalTo: sceneView.bottomAnchor, constant: -16 - 44 - 4),
             cameraInfoButton.trailingAnchor.constraint(equalTo: sceneView.trailingAnchor, constant: -16)
+        ])
+        
+        // Run button
+        let runButton = UIButton()
+        runButton.setImage(UIImage(systemName: "play.fill", withConfiguration: largeSymbol), for: .normal)
+        runButton.layer.cornerRadius = 22
+        runButton.addTarget(self, action: #selector(mockInspection), for: .touchUpInside)
+        
+        sceneView.addSubview(runButton)
+        runButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            runButton.widthAnchor.constraint(equalToConstant: 44),
+            runButton.heightAnchor.constraint(equalToConstant: 44),
+            runButton.bottomAnchor.constraint(equalTo: sceneView.bottomAnchor, constant: -16 - 44 - 4 - 44 - 4),
+            runButton.trailingAnchor.constraint(equalTo: sceneView.trailingAnchor, constant: -16)
         ])
         
     }
@@ -342,5 +361,50 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
             }
         })
     }
+    
+    @objc func mockInspection(sender: UIButton) {
+        guard let vertexCounts,
+              let object = sceneView?.scene.rootNode.childNode(withName: "placed-object", recursively: false) else { return }
+        
+        object.geometry = object.geometry?.clearColors()
+        object.opacity = 1.0
+        showLoadingDialog()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + ((self.counter % 2 == 0) ? 32 : 28)) {
+            object.geometry = (self.counter % 2 == 0)
+            ? object.geometry?.colorizeElementsAt(found: [0,1,2,4], missing: [], nonvisible: [3], vertexCounts: vertexCounts)
+            : object.geometry?.colorizeElementsAt(found: [0,1,2,3], missing: [4], nonvisible: [], vertexCounts: vertexCounts)
+            object.opacity = 0.8
+            
+            self.dismissLoadingDialog()
+            self.counter += 1
+        }
+        
+    }
 
+}
+
+extension ARContainer {
+    func showLoadingDialog() {
+        // Create alert controller
+        let alert = UIAlertController(title: nil, message: "Waiting inspection result...\n\n", preferredStyle: .alert)
+        alert.view.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Add activity indicator
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.startAnimating()
+        
+        alert.view.addSubview(activityIndicator)
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: alert.view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: alert.view.centerYAnchor, constant: 16)
+        ])
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func dismissLoadingDialog() {
+        dismiss(animated: true, completion: nil)
+    }
 }

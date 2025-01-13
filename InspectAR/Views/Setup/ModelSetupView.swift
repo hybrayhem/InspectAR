@@ -247,7 +247,7 @@ struct ModelSetupView: View {
             }
             .navigationDestination(isPresented: $navigateToNext,
                                    destination: {
-                MainARView(scnNode: scaledNode ?? SCNNode())
+                MainARView(scnNode: scaledNode ?? SCNNode(), vertexCounts: model?.vertexCounts ?? [])
             })
             .disabled(isUploadDisabled)
 

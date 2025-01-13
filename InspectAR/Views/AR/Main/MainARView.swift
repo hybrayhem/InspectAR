@@ -12,12 +12,14 @@ import SceneKit
 
 struct MainARView: View {
     let scnNode: SCNNode
+    let vertexCounts: [Int]
     // let overlayType: enum
     let container: ARContainerRepresentable
     
-    init(scnNode: SCNNode) {
+    init(scnNode: SCNNode, vertexCounts: [Int]) {
         self.scnNode = scnNode
-        self.container = ARContainerRepresentable(objectToPlace: scnNode)
+        self.vertexCounts = vertexCounts
+        self.container = ARContainerRepresentable(objectToPlace: scnNode, vertexCounts: vertexCounts)
     }
     
     var body: some View {
@@ -32,7 +34,7 @@ struct MainARView: View {
 
 struct MainARViewPreview: View {
     let model = ModelStore().load(name: "chassis.step")
-    let box = SCNNode(geometry: SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0))
+    let box = SCNNode(geometry: SCNPyramid(width: 0.1, height: 0.1, length: 0.1))
     
     var node: SCNNode? {
         let node = model?.scnNode
@@ -42,6 +44,7 @@ struct MainARViewPreview: View {
     }
     
     var body: some View {
-        MainARView(scnNode: node ?? box)
+//        MainARView(scnNode: node ?? box)
+        EmptyView()
     }
 }
