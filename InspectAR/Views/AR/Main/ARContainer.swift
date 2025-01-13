@@ -7,7 +7,7 @@
 
 import ARKit
 import SwiftUI
-import RealityKit
+import SceneKit
 
 enum ARState {
     case none
@@ -44,10 +44,9 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
     internal var session: ARSession? { sceneView?.session }
     // Objects
     var objectToPlace: SCNNode?
+    var initialObjectScale: SCNVector3?
     internal var shadowObject: SCNNode?
     internal var placeAt = SCNNode()
-    internal var panOffset = SIMD3<Float>()
-    internal var initialPanPosition: SIMD3<Float>?
     // States
     internal var state: ARState = .none {
         didSet {
@@ -63,6 +62,11 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         }
     }
     internal var stateLock = NSLock()
+    // Gesture Variables
+    internal var panOffset = SIMD3<Float>()
+    internal var initialPanPosition: SIMD3<Float>?
+    internal var currentScaleStepIndex = 4 // 2
+    internal let scaleSteps: [Float] = [0.01, 0.05, 0.1, 0.5, 1.0, 2.0, 10.0, 20.0, 100.0] // [0.01, 0.1, 1.0, 10.0, 100.0]
     
     // MARK: - Init
     override func viewDidLoad() {
@@ -168,6 +172,7 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
             let boxGeometry = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
             objectToPlace = SCNNode(geometry: boxGeometry)
         }
+        initialObjectScale = objectToPlace?.scale
         
         // Create shadow object
         if let shadowObject = objectToPlace?.clone() {
@@ -182,14 +187,33 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
     private func setupGestures() {
         guard let sceneView else { return }
         
+        // Create gestures
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        sceneView.addGestureRecognizer(tapGesture)
+        
+        let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
+        doubleTapGesture.numberOfTapsRequired = 2
         
         let rotationGesture = UIRotationGestureRecognizer(target: self, action: #selector(handleRotation))
-        sceneView.addGestureRecognizer(rotationGesture)
+        rotationGesture.delegate = self
+        
+        let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch))
+        pinchGesture.delegate = self
+        
+        let doublePanGesture = UIPanGestureRecognizer(target: self, action: #selector(handleDoublePan))
+        doublePanGesture.minimumNumberOfTouches = 2
+        doublePanGesture.delegate = self
         
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
-        sceneView.addGestureRecognizer(panGesture)
+        panGesture.maximumNumberOfTouches = 1
+        panGesture.delegate = self
+        
+        // Set dependencies
+        tapGesture.require(toFail: doubleTapGesture)
+        
+        // Add gestures
+        [tapGesture, doubleTapGesture, rotationGesture, pinchGesture, doublePanGesture, panGesture].forEach {
+            sceneView.addGestureRecognizer($0)
+        }
     }
     
     // MARK: - Lifecycle
