@@ -345,6 +345,7 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         var capturedImageHighRes: CVPixelBuffer?
         sceneView?.session.captureHighResolutionFrame(completion: { frame, error in
             capturedImageHighRes = frame?.capturedImage
+            // capturedImageHighRes = capturedImage // DEBUG
 
             let ciImage = CIImage(cvPixelBuffer: capturedImageHighRes!/*, options: [.applyOrientationProperty: true]*/).oriented(.right)
             
@@ -360,6 +361,15 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
                 imageView.removeFromSuperview()
             }
         })
+        
+        print("Camera up: \(camera.worldUp)")
+        print("Camera position: \(camera.worldPosition)")
+        print("Camera orientation: \(camera.worldOrientation)")
+        print("Camera transform: \(camera.worldTransform)")
+        
+        let object = sceneView?.scene.rootNode.childNode(withName: "placed-object", recursively: false)
+        print("Object position: \(object?.worldPosition ?? SCNVector3())")
+        print("Object orientation: \(object?.worldOrientation ?? SCNQuaternion())")
     }
     
     @objc func mockInspection(sender: UIButton) {
