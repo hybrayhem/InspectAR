@@ -144,25 +144,25 @@ extension ARContainer: UIGestureRecognizerDelegate {
               let object = sceneView.scene.rootNode.childNode(withName: "placed-object", recursively: false) else { return }
         
         if state == .objectPlaced {
-            // 1. Translating pan
-            let translation = gesture.translation(in: sceneView)
-            object.position.x += Float(translation.x) / 1000
-            object.position.z -= Float(-translation.y) / 1000
-            gesture.setTranslation(.zero, in: sceneView)
+//            // 1. Translating pan
+//            let translation = gesture.translation(in: sceneView)
+//            object.position.x += Float(translation.x) / 1000
+//            object.position.z -= Float(-translation.y) / 1000
+//            gesture.setTranslation(.zero, in: sceneView)
 
-//            // 2. Positioning pan
-//            guard let nearestPlaneXYZ = raycastNearestPlaneSIMD(from: gesture.location(in: sceneView), sceneView: sceneView) else {
-//                return
-//            }
-//            
-//            switch gesture.state {
-//            case .began:
-//                panOffset = nearestPlaneXYZ - object.simdWorldPosition
-//            case .changed:
-//                object.simdWorldPosition = nearestPlaneXYZ - panOffset
-//            default:
-//                break
-//            }
+            // 2. Positioning pan
+            guard let nearestPlaneXYZ = raycastNearestPlaneSIMD(from: gesture.location(in: sceneView), sceneView: sceneView) else {
+                return
+            }
+            
+            switch gesture.state {
+            case .began:
+                panOffset = nearestPlaneXYZ - object.simdWorldPosition
+            case .changed:
+                object.simdWorldPosition = nearestPlaneXYZ - panOffset
+            default:
+                break
+            }
   
 //            // 3. Dynamic positioning pan
 //            switch gesture.state {

@@ -170,7 +170,7 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         let runButton = UIButton()
         runButton.setImage(UIImage(systemName: "play.fill", withConfiguration: largeSymbol), for: .normal)
         runButton.layer.cornerRadius = 22
-        runButton.addTarget(self, action: #selector(mockInspection), for: .touchUpInside)
+        runButton.addTarget(self, action: #selector(apiInspection), for: .touchUpInside)
         
         sceneView.addSubview(runButton)
         runButton.translatesAutoresizingMaskIntoConstraints = false
@@ -342,25 +342,26 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         let capturedImage = sceneView?.session.currentFrame?.capturedImage
         print("capturedImage size: ", UIImage(ciImage: CIImage(cvPixelBuffer: capturedImage!)).size)
         
-        var capturedImageHighRes: CVPixelBuffer?
-        sceneView?.session.captureHighResolutionFrame(completion: { frame, error in
-            capturedImageHighRes = frame?.capturedImage
-            // capturedImageHighRes = capturedImage // DEBUG
-
-            let ciImage = CIImage(cvPixelBuffer: capturedImageHighRes!/*, options: [.applyOrientationProperty: true]*/).oriented(.right)
-            
-            // Show image
-            let image = UIImage(ciImage: ciImage)
-            print("capturedImageHighRes size: ", image.size)
-            let imageView = UIImageView(image: image)
-            imageView.contentMode = .scaleAspectFit
-            imageView.frame = self.view.bounds
-            self.view.addSubview(imageView)
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                imageView.removeFromSuperview()
-            }
-        })
+//        var capturedImageHighRes: CVPixelBuffer?
+//        sceneView?.session.captureHighResolutionFrame(completion: { frame, error in
+//            capturedImageHighRes = frame?.capturedImage
+//            // capturedImageHighRes = capturedImage // DEBUG
+//             // DEBUG
+//
+//            let ciImage = CIImage(cvPixelBuffer: capturedImageHighRes!/*, options: [.applyOrientationProperty: true]*/).oriented(.right)
+//            
+//            // Show image
+//            let image = UIImage(ciImage: ciImage)
+//            print("capturedImageHighRes size: ", image.size)
+//            let imageView = UIImageView(image: image)
+//            imageView.contentMode = .scaleAspectFit
+//            imageView.frame = self.view.bounds
+//            self.view.addSubview(imageView)
+//            
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//                imageView.removeFromSuperview()
+//            }
+//        })
         
         print("Camera up: \(camera.worldUp)")
         print("Camera position: \(camera.worldPosition)")
@@ -370,28 +371,107 @@ class ARContainer: UIViewController, ARSCNViewDelegate {
         let object = sceneView?.scene.rootNode.childNode(withName: "placed-object", recursively: false)
         print("Object position: \(object?.worldPosition ?? SCNVector3())")
         print("Object orientation: \(object?.worldOrientation ?? SCNQuaternion())")
+        
+        if let object {
+            let image = sceneView?.drawBoundingBoxOnCapturedImage(for: object)
+            let imageView = UIImageView(image: image)
+            imageView.contentMode = .scaleAspectFit
+            imageView.frame = self.view.bounds
+            self.view.addSubview(imageView)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                imageView.removeFromSuperview()
+            }
+        }
     }
     
-    @objc func mockInspection(sender: UIButton) {
-        guard let vertexCounts,
-              let object = sceneView?.scene.rootNode.childNode(withName: "placed-object", recursively: false) else { return }
+//    @objc func mockInspection(sender: UIButton) {
+//        guard let vertexCounts,
+//              let object = sceneView?.scene.rootNode.childNode(withName: "placed-object", recursively: false) else { return }
+//        
+//        object.geometry = object.geometry?.clearColors()
+//        object.opacity = 1.0
+//        showLoadingDialog()
+//        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + ((self.counter % 2 == 0) ? 32 : 28)) {
+//            object.geometry = (self.counter % 2 == 0)
+//            ? object.geometry?.colorizeElementsAt(found: [0,1,2,4], missing: [], nonvisible: [3], vertexCounts: vertexCounts)
+//            : object.geometry?.colorizeElementsAt(found: [0,1,2,3], missing: [4], nonvisible: [], vertexCounts: vertexCounts)
+//            object.opacity = 0.8
+//            
+//            self.dismissLoadingDialog()
+//            self.counter += 1
+//        }
+//    }
+    
+    @objc func apiInspection(sender: UIButton) {
+        guard let sceneView,
+              let camera = sceneView.pointOfView,
+              let avCamera = sceneView.session.currentFrame?.camera,
+              let object = sceneView.scene.rootNode.childNode(withName: "placed-object", recursively: false) else { return }
         
         object.geometry = object.geometry?.clearColors()
         object.opacity = 1.0
-        showLoadingDialog()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + ((self.counter % 2 == 0) ? 32 : 28)) {
-            object.geometry = (self.counter % 2 == 0)
-            ? object.geometry?.colorizeElementsAt(found: [0,1,2,4], missing: [], nonvisible: [3], vertexCounts: vertexCounts)
-            : object.geometry?.colorizeElementsAt(found: [0,1,2,3], missing: [4], nonvisible: [], vertexCounts: vertexCounts)
-            object.opacity = 0.8
+        // Camera Parameters
+        let intrinsics = avCamera.intrinsics
+        let fx = intrinsics.columns.0.x
+        let fy = intrinsics.columns.1.y
+        let cx = intrinsics.columns.2.x
+        let cy = intrinsics.columns.2.y
+        
+        // Image
+        guard let capturedImage = sceneView.session.currentFrame?.capturedImage else { return }
+        let image = UIImage(ciImage: CIImage(cvPixelBuffer: capturedImage).oriented(.right))
+        let imageWidth = image.size.width
+        let imageHeight = image.size.height
+        
+        // 2D Bounding Box of Object
+        let boundingBox = sceneView.boundingBox2DInCapturedImage(for: object)
+        print("Bounding Box: \(boundingBox ?? .zero)")
+        
+        // Relative Orientation of Object
+        let cameraOrientation = camera.worldOrientation.toQuaternion()
+        let objectOrientation = object.worldOrientation.toQuaternion()
+        let relativeOrientation = cameraOrientation.inverse * objectOrientation
+        let node = SCNNode()
+        node.simdOrientation = relativeOrientation
+        let relativeAngles = node.eulerAngles
+        print("Relative Orientation: \(relativeAngles)")
+        
+        guard let boundingBox else { return }
+        showLoadingDialog()
+        inspectObject(fx, fy, cx, cy,
+                          image, imageWidth, imageHeight,
+                          [boundingBox.minX, boundingBox.minY, boundingBox.maxX, boundingBox.maxY],
+                          [relativeAngles.x, relativeAngles.y, relativeAngles.z]) { result in
+            print("Inspection result: \(result ?? "nil")")
+            
+//            object.geometry = object.geometry?.colorizeElementsAt(found: [0,1,2,4], missing: [], nonvisible: [3], vertexCounts: self.vertexCounts)
+//            object.opacity = 0.8
             
             self.dismissLoadingDialog()
-            self.counter += 1
         }
-        
     }
 
+}
+
+extension SCNQuaternion {
+    // Convert SCNVector4 to quaternion representation
+    func toQuaternion() -> simd_quatf {
+        return simd_quatf(ix: Float(self.x),
+                          iy: Float(self.y),
+                          iz: Float(self.z),
+                          r: Float(self.w))
+    }
+    
+    // Create SCNVector4 from quaternion
+    static func fromQuaternion(_ quaternion: simd_quatf) -> SCNVector4 {
+        return SCNVector4(x: Float(CGFloat(quaternion.imag.x)),
+                          y: Float(CGFloat(quaternion.imag.y)),
+                          z: Float(CGFloat(quaternion.imag.z)),
+                          w: Float(CGFloat(quaternion.real)))
+    }
 }
 
 extension ARContainer {
@@ -416,5 +496,319 @@ extension ARContainer {
     
     func dismissLoadingDialog() {
         dismiss(animated: true, completion: nil)
+    }
+}
+
+// MARK: - Network
+import Alamofire
+extension ARContainer {
+    func inspectObject(_ fx: Float, _ fy: Float, _ cx: Float, _ cy: Float,
+                       _ image: UIImage, _ imageWidth: CGFloat, _ imageHeight: CGFloat,
+                       _ boundingBox: [CGFloat], _ relativeAngles: [Float],
+                       completion: @escaping (String?) -> Void)
+    {
+        let endpointUrl = Constants.API.baseURL + "/inspectObject"
+        
+        guard let imageData = image.jpegData(compressionQuality: 1.0) else {
+            print("Error converting image to data")
+            completion(nil)
+            return
+        }
+        
+        let boundingBoxStr = boundingBox.map { String(Float($0)) }.joined(separator: ", ")
+        let relativeAnglesStr = relativeAngles.map { String($0) }.joined(separator: ", ")
+        let parameters: [String: String] = [
+            "fx": String(fx),
+            "fy": String(fy),
+            "cx": String(cx),
+            "cy": String(cy),
+            "imageWidth": String(Float(imageWidth)),
+            "imageHeight": String(Float(imageHeight)),
+            "boundingBox": boundingBoxStr,
+            "relativeAngles": relativeAnglesStr
+        ]
+        
+        AF.upload(
+            multipartFormData: { multipartFormData in
+                for (key, value) in parameters {
+                    multipartFormData.append(Data(value.utf8), withName: key)
+                }
+                
+                multipartFormData.append(imageData, withName: "file", fileName: "image.jpg", mimeType: "image/jpeg")
+            },
+            to: endpointUrl,
+            method: .post
+        ).responseData { response in
+            let fail = { (message: String) in
+                print(message)
+                completion(nil)
+            }
+            
+            switch response.result {
+            case .success(let data):
+                if let response = try? JSONSerialization.jsonObject(with: data) as? [String: String],
+                   let fileName = response["filename"] {
+                    return completion(fileName)
+                }
+                fail("Failed to parse file name response")
+            case .failure(let error):
+                fail("File upload failed: \(error)")
+            }
+        }
+        
+    }
+    
+    func uploadImage(image: CGImage, completion: @escaping (String?) -> Void) {
+//        guard let (fileName, fileData) = readFileData(fileUrl: stepUrl) else { return completion(nil) }
+//        
+//        let endpointUrl = Constants.API.baseURL + "/uploadStep"
+//        AF.upload(
+//            multipartFormData: { multipartFormData in
+//                multipartFormData.append(
+//                    fileData,
+//                    withName: "file",
+//                    fileName: fileName,
+//                    mimeType: "model/step"
+//                )
+//            },
+//            to: endpointUrl
+//        )
+//        .validate()
+//        .uploadProgress { progress in
+//            print("Progress: \(progress.fractionCompleted)")
+//            uploadProgress = progress.fractionCompleted
+//        }
+//        .responseData { response in
+//            let fail = { (message: String) in
+//                print(message)
+//                completion(nil)
+//            }
+//            
+//            switch response.result {
+//            case .success(let data):
+//                if let response = try? JSONSerialization.jsonObject(with: data) as? [String: String],
+//                   let fileName = response["filename"] {
+//                    return completion(fileName)
+//                }
+//                fail("Failed to parse file name response")
+//            case .failure(let error):
+//                fail("File upload failed: \(error)")
+//            }
+//        }
+    }
+    
+}
+
+extension ARSCNView {
+    func boundingBox2D(for node: SCNNode) -> CGRect? {
+        // Get the node's bounding box in its local coordinate space
+        let boundingBox = node.boundingBox
+        let bmin = boundingBox.min
+        let bmax = boundingBox.max
+        
+        // Get all corners of the bounding box
+        let corners = [
+            SCNVector3(bmin.x, bmin.y, bmin.z),
+            SCNVector3(bmin.x, bmin.y, bmax.z),
+            SCNVector3(bmin.x, bmax.y, bmin.z),
+            SCNVector3(bmin.x, bmax.y, bmax.z),
+            SCNVector3(bmax.x, bmin.y, bmin.z),
+            SCNVector3(bmax.x, bmin.y, bmax.z),
+            SCNVector3(bmax.x, bmax.y, bmin.z),
+            SCNVector3(bmax.x, bmax.y, bmax.z)
+        ]
+        
+        // Convert corners to screen space
+        var minX: CGFloat = .infinity
+        var maxX: CGFloat = -.infinity
+        var minY: CGFloat = .infinity
+        var maxY: CGFloat = -.infinity
+        
+        for corner in corners {
+            // Convert the point from local node coordinates to world coordinates
+            let worldPoint = node.convertPosition(corner, to: nil)
+            
+            // Project the world point to screen coordinates
+            let projection = projectPoint(worldPoint)
+            
+            // Check if the point is in front of the camera
+            guard projection.z > 0 else { continue }
+            
+            minX = min(minX, CGFloat(projection.x))
+            maxX = max(maxX, CGFloat(projection.x))
+            minY = min(minY, CGFloat(projection.y))
+            maxY = max(maxY, CGFloat(projection.y))
+        }
+        
+        // If we couldn't project any points, return nil
+        guard minX != .infinity else { return nil }
+        
+        return CGRect(x: minX,
+                     y: minY,
+                     width: maxX - minX,
+                     height: maxY - minY)
+    }
+    
+    func boundingBox2DInCapturedImage(for node: SCNNode) -> CGRect? {
+        guard let currentFrame = session.currentFrame else { return nil }
+        
+        // Get the node's bounding box in its local coordinate space
+        let boundingBox = node.boundingBox
+        let bmin = boundingBox.min
+        let bmax = boundingBox.max
+        
+        // Get all corners of the bounding box
+        let corners = [
+            SCNVector3(bmin.x, bmin.y, bmin.z),
+            SCNVector3(bmin.x, bmin.y, bmax.z),
+            SCNVector3(bmin.x, bmax.y, bmin.z),
+            SCNVector3(bmin.x, bmax.y, bmax.z),
+            SCNVector3(bmax.x, bmin.y, bmin.z),
+            SCNVector3(bmax.x, bmin.y, bmax.z),
+            SCNVector3(bmax.x, bmax.y, bmin.z),
+            SCNVector3(bmax.x, bmax.y, bmax.z)
+        ]
+        
+        var minX: CGFloat = .infinity
+        var maxX: CGFloat = -.infinity
+        var minY: CGFloat = .infinity
+        var maxY: CGFloat = -.infinity
+        
+        for corner in corners {
+            // Convert corner from local node coordinates to world coordinates
+            let worldPoint = node.convertPosition(corner, to: nil)
+            
+            // Convert world position to camera coordinates
+            let point = currentFrame.camera.projectPoint(
+                simd_float3(x: Float(worldPoint.x),
+                           y: Float(worldPoint.y),
+                           z: Float(worldPoint.z)),
+                orientation: .portrait,
+                viewportSize: currentFrame.camera.imageResolution)
+            
+            // The point is now in image coordinates (origin at top-left)
+            minX = min(minX, CGFloat(point.x))
+            maxX = max(maxX, CGFloat(point.x))
+            minY = min(minY, CGFloat(point.y))
+            maxY = max(maxY, CGFloat(point.y))
+        }
+        
+        // If we couldn't project any points, return nil
+        guard minX != .infinity else { return nil }
+        
+        return CGRect(x: minX,
+                     y: minY,
+                     width: maxX - minX,
+                     height: maxY - minY)
+    }
+    
+//    func boundingBox2DInCapturedImage(for node: SCNNode) -> CGRect? {
+//        guard let currentFrame = session.currentFrame else { return nil }
+//        
+//        // Get the node's bounding box in its local coordinate space
+//        let boundingBox = node.boundingBox
+//        let bmin = boundingBox.min
+//        let bmax = boundingBox.max
+//        
+//        // Get all corners of the bounding box
+//        let corners = [
+//            SCNVector3(bmin.x, bmin.y, bmin.z),
+//            SCNVector3(bmin.x, bmin.y, bmax.z),
+//            SCNVector3(bmin.x, bmax.y, bmin.z),
+//            SCNVector3(bmin.x, bmax.y, bmax.z),
+//            SCNVector3(bmax.x, bmin.y, bmin.z),
+//            SCNVector3(bmax.x, bmin.y, bmax.z),
+//            SCNVector3(bmax.x, bmax.y, bmin.z),
+//            SCNVector3(bmax.x, bmax.y, bmax.z)
+//        ]
+//        
+//        var minX: CGFloat = .infinity
+//        var maxX: CGFloat = -.infinity
+//        var minY: CGFloat = .infinity
+//        var maxY: CGFloat = -.infinity
+//        
+//        // Get current camera transform
+//        let viewMatrix = currentFrame.camera.viewMatrix(for: .portrait)
+//        let projectionMatrix = currentFrame.camera.projectionMatrix(for: .portrait,
+//                                                                    viewportSize: currentFrame.camera.imageResolution,
+//                                                                    zNear: 0.001,
+//                                                                    zFar: 1000)
+//        
+//        for corner in corners {
+//            // Convert from local node space to world space
+//            let worldPoint = node.presentation.convertPosition(corner, to: nil)
+//            
+//            // Convert to 4D homogeneous coordinate
+//            var worldVector = simd_float4(Float(worldPoint.x),
+//                                          Float(worldPoint.y),
+//                                          Float(worldPoint.z),
+//                                          1.0)
+//            
+//            // Transform to camera space
+//            let cameraVector = viewMatrix * worldVector
+//            
+//            // Project to 2D
+//            let projectedVector = projectionMatrix * cameraVector
+//            
+//            // Perspective division
+//            guard projectedVector.w != 0 else { continue }
+//            let normalizedVector = projectedVector / projectedVector.w
+//            
+//            // Convert to image coordinates
+//            let imageSize = currentFrame.camera.imageResolution
+//            let point = CGPoint(
+//                x: CGFloat((normalizedVector.x + 1.0) * 0.5 * Float(imageSize.width)),
+//                y: CGFloat((1.0 - normalizedVector.y) * 0.5 * Float(imageSize.height))
+//            )
+//            
+//            minX = min(minX, point.x)
+//            maxX = max(maxX, point.x)
+//            minY = min(minY, point.y)
+//            maxY = max(maxY, point.y)
+//        }
+//        
+//        // If we couldn't project any points, return nil
+//        guard minX != .infinity else { return nil }
+//        
+//        return CGRect(x: minX,
+//                      y: minY,
+//                      width: maxX - minX,
+//                      height: maxY - minY)
+//    }
+    
+    func drawBoundingBoxOnCapturedImage(for node: SCNNode) -> UIImage? {
+        guard let currentFrame = session.currentFrame,
+              let boundingBox = boundingBox2DInCapturedImage(for: node) else {
+            return nil
+        }
+        
+        // Convert CVPixelBuffer to CIImage
+        let ciImage = CIImage(cvPixelBuffer: currentFrame.capturedImage)
+        
+        // Rotate the image 90 degrees clockwise
+        let rotatedImage = ciImage.oriented(.right)
+        
+        // Create UIImage with the rotated CIImage
+        let context = CIContext(options: nil)
+        guard let cgImage = context.createCGImage(rotatedImage, from: rotatedImage.extent) else {
+            return nil
+        }
+        let image = UIImage(cgImage: cgImage)
+        
+        // Create a context with the rotated size
+        UIGraphicsBeginImageContext(image.size)
+        defer { UIGraphicsEndImageContext() }
+        
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        
+        // Draw the rotated captured image
+        image.draw(in: CGRect(origin: .zero, size: image.size))
+        
+        // Draw the bounding box
+        context.setStrokeColor(UIColor.green.cgColor)
+        context.setLineWidth(3.0)
+        context.stroke(boundingBox)
+        
+        return UIGraphicsGetImageFromCurrentImageContext()
     }
 }
